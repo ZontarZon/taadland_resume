@@ -16,45 +16,10 @@ body {
   background-attachment: fixed;
   background-repeat: no-repeat;
   background: url("../public/stars.svg"); /* W3C */  
-  background-size: 150px;
-}
-
-%body_overlay {
-  z-index: 0;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-}
-
-#body_overlay_1 {
-  @extend %body_overlay;
-  top: 0;
-  background-image: linear-gradient(to bottom, #5946ae, rgba(0,0,0,0));
-  height: 200px;
-}
-
-#body_overlay_2 {
-  @extend %body_overlay;
-  bottom: 0;
-  background-image: radial-gradient(circle at 110% 180%, #d9a0de, rgba(0,0,0,1), rgba(0,0,0,1), rgba(0,0,0,0.5), transparent);
-}
-
-#body_content {
-  position: fixed;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
+  background-size: 450px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
- #planet {
-  position: fixed;
-  width: 900px;
-  max-height: 100vh;
-  bottom: -40%;
-  right: -20%;
- }
