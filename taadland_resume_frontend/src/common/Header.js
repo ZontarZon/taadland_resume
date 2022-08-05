@@ -29,7 +29,7 @@ const Header = () => {
       setMediaQuery("desktop");
       setOpenNavSideBar(false);
     }
-  }, [windowWidth]);
+  }, [windowWidth, mediaQuery]);
 
   return (
     <div id="header">

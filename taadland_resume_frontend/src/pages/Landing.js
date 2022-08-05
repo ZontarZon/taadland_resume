@@ -7,7 +7,7 @@ const Landing = () => {
       <div id="landing_header_container">
         <div id="landing_header_txt_container">
           <div id='landing_h1_container'>
-          <img id='landing_h1_icon' src="white_lines_icon_1.svg"/>
+          <img id='landing_h1_icon' alt='white_lines_decor' src="white_lines_icon_1.svg"/>
 
           <h1 id="landing_h1">Thorya Aadland</h1>
           </div>
