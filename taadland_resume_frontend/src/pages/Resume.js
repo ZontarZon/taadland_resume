@@ -24,11 +24,17 @@ const Resume = () => {
           <br />
           <b>Art and Design Software:</b> Adobe Photoshop, Adobe Illustrator,
           Adobe Animate, Clip Studio Paint, Procreate
-          <br />
+        </p>
+      </div>
+
+      <div className="body_content_text">
+        <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Experience</h2>
           <hr />
-          <b>Van Robotics, Columbia SC - UI Designer/Developer (July 2018 -
-          present)</b>
+          <b>
+            Van Robotics, Columbia SC - UI Designer/Developer (July 2018 -
+            present)
+          </b>
           <ul>
             <li>
               Designed and developed web interfaces to accompany the ABii robot,
@@ -62,8 +68,10 @@ const Resume = () => {
               learning experience.
             </li>
           </ul>
-          <b>Independent Contractor, Columbia, SC - Freelance Digital Artist
-          (January 2022 - present)</b>
+          <b>
+            Independent Contractor, Columbia, SC - Freelance Digital Artist
+            (January 2022 - present)
+          </b>
           <ul>
             <li>
               Accepted commissions and contracts for independent illustration
@@ -78,17 +86,33 @@ const Resume = () => {
               media, from YouTube videos to research proposals.
             </li>
           </ul>
-          USC Center for Digital Humanities, Columbia SC - Full-Stack Web
-          Developer (May 2018 - August 2018) Developed a grant-funded web
-          archive of historical media for the city of Columbia, on behalf of the
-          African American Studies department at the University of South
-          Carolina. Assisted in the design of the WardOne app, an iOS app which
-          contained a digital tour of historic downtown Columbia with the use of
-          the Google Maps API.
+          <b>
+            USC Center for Digital Humanities, Columbia SC - Full-Stack Web
+            Developer (May 2018 - August 2018)
+          </b>
+          <ul>
+            <li>
+              Developed a grant-funded web archive of historical media for the
+              city of Columbia, on behalf of the African American Studies
+              department at the University of South Carolina.
+            </li>
+            <li>
+              Assisted in the design of the WardOne app, an iOS app which
+              contained a digital tour of historic downtown Columbia with the
+              use of the Google Maps API.
+            </li>
+          </ul>
+        </p>
+      </div>
+
+      <div className="body_content_text">
+        <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Education</h2>
           <hr />
-          <b>University of South Carolina, Columbia SC - Bachelor of Science in
-          Computer Science, Minor in Media Arts (2018)</b>
+          <b>
+            University of South Carolina, Columbia SC - Bachelor of Science in
+            Computer Science, Minor in Media Arts (2018)
+          </b>
         </p>
       </div>
     </div>
