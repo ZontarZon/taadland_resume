@@ -1,5 +1,6 @@
 #header {
   position: fixed;
+  z-index: 2;
   top: 0;
   display: flex;
   justify-content: left;
@@ -69,10 +70,11 @@
   #links_container {
     position: fixed;
     display: grid;
+    z-index: 2;
     grid-template-rows: 50px 50px 50px;
     grid-gap: 20px;
     padding: 20px 0px 0px 0px;
-    background-color: rgba(56, 43, 71, 0.95);
+    background-color: rgba(56, 43, 71, 1);
     top: 70px;
     width: 200px;
     height: calc(100% - 70px);

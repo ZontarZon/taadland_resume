@@ -10,9 +10,9 @@ function App() {
     <div style={{width: "100%", height: "100%", position: 'relative'}}>
       <div id="body_overlay_2"></div>
               <img id="planet" alt="planet_dark_mode" src="planet_dark.svg" />
+        <Header />
 
       <div id="body_content">
-        <Header />
         <div id='body_content_container'>
           <BrowserRouter>
             <Routes>
