@@ -2,7 +2,11 @@
   display: grid;
   grid-template-columns: 50% 50%;
   justify-content: center;
-  background-image: linear-gradient(to right, rgba(141, 107, 181, 0.2), rgba(0,0,0,0));
+  background-image: linear-gradient(
+    to right,
+    rgba(141, 107, 181, 0.2),
+    rgba(0, 0, 0, 0)
+  );
   padding: 0px 0px 0px 30px;
   height: fit-content;
   min-height: 300px;
@@ -13,21 +17,29 @@
   flex-flow: column;
   justify-content: center;
   padding: 0px 0px 0px 30px;
+}
 
+#landing_h1, #landing_h3 {
+  font-family: 'Rockwell';
+}
 
-  div {
-    flex: 1;
-  }
-
+#landing_h1_container {
+  display: grid;
+  grid-template-columns: 70px auto;
+  grid-gap: 10px;
+  justify-content: start;
+  align-items: center;
+  margin-top: 50px;
 }
 
 #landing_h1 {
   font-size: 60px;
   font-weight: 800;
-  margin-bottom: 0;
+  margin: 0px 0px -20px 0px;
   min-height: fit-content;
-
 }
+
+
 
 #landing_h3 {
   font-size: 40px;
@@ -62,14 +74,48 @@
 @media screen and (max-width: 900px) {
   #teila_img {
     position: absolute;
-    top: 0; 
+    top: 0;
     left: 0;
-    bottom: 0; 
-    margin-top: auto; 
-    margin-bottom: auto; 
-    transform: translate(0%, -50%);
-    animation: rotation 50s infinite linear;
-    max-width: inherit;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
     max-height: 300px;
+  }
+
+  #landing_header_container {
+    padding: 0px 0px 0px 20px;
+  }
+
+  #landing_header_txt_container {
+    padding: 0px;
+  }
+}
+
+#contact_info_container {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+
+.contact_info {
+  display: grid;
+  grid-template-columns: 30px auto;
+  align-items: center;
+  margin-right: 30px;
+  border: 1px solid #c3b4dd;
+  border-radius: 15px;
+  background-image: linear-gradient(to right, #9c6bb5, #775ea9);
+  padding-left: 10px;
+  margin-bottom: 10px;
+  a {
+    color: white;
+    padding: 10px 10px 10px 0px;
+    text-decoration: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #landing_h1_icon {
+    display: none;
   }
 }

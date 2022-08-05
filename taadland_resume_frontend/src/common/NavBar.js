@@ -1,9 +1,11 @@
 import React from "react";
 import {FaHouseUser, FaList, FaQuestion} from "react-icons/fa";
 
-const NavBar = () => {
+const NavBar = ({openNavSideBar}) => {
   return (
-  <div id='links_container'>
+  <div id='links_container'
+    style={{left: openNavSideBar ? '0px' : '-200px'}}
+  >
     <a href='/' className="nav_btn border-gradient border-gradient-purple">
       <FaHouseUser/>
       <p>Home</p></a>
