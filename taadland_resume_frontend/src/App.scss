@@ -5,6 +5,7 @@
   width: 100%;
   z-index: 1;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #body_content::-webkit-scrollbar {
@@ -58,6 +59,9 @@ code {
   background-color: rgba(95, 71, 122, 0.8);
   padding: 10px;
   margin-bottom: 20px;
+  ul {
+    font-weight: lighter;
+  }
   p {
     margin: 15px;
     text-align: center;
@@ -65,9 +69,29 @@ code {
   }
   hr {
     margin-left: 0;
+    position: relative;
     border-top: 1px solid white;
     border-bottom: none;
+    margin-bottom: 15px;
     width: 50%;
     min-width: 200px;
   }
+
+  hr:before, hr:after {
+    content: " ";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    transform: rotate(45deg);
+    border: 1px solid white;
+    background-color: white;
+    }
+hr:before {
+    left: -5px;
+    bottom: -5px;
+}
+hr:after {
+    bottom: -5px;
+    right: -5px;
+}
 }

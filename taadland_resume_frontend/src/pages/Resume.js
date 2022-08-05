@@ -7,8 +7,8 @@ const Resume = () => {
       <BodyContentHeader
         headerTitle="Resume"
         headerSubtitle=""
-        imgSrc="self_portrait.png"
-        imgAlt="self portrait"
+        imgSrc="planet_dark.svg"
+        imgAlt="planet dark mode"
       />
       <div className="body_content_text">
         <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
