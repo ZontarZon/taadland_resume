@@ -17,13 +17,13 @@ const Landing = () => {
           <div id="contact_info_container">
         <div className="contact_info">
           <FaEnvelope />
-          <a href="mailto:thoryagudrun@gmail.com">thoryagudrun@gmail.com</a>
+          <a href="mailto:thoryagudrun@gmail.com">Email</a>
         </div>
 
         <div className="contact_info">
           <FaLinkedin />
           <a href="https://www.linkedin.com/in/thorya-aadland/">
-            thorya-aadland
+            LinkedIn
           </a>
         </div>
       </div>

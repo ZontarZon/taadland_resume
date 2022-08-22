@@ -10,8 +10,9 @@ const Resume = () => {
         imgSrc="planet_dark.svg"
         imgAlt="planet dark mode"
       />
+
       <div className="body_content_text">
-        <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
+        <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Technical Skills</h2>
           <hr />
           <b>Programming:</b> React, Javascript, Node, Django, Python
@@ -24,11 +25,11 @@ const Resume = () => {
           <br />
           <b>Art and Design Software:</b> Adobe Photoshop, Adobe Illustrator,
           Adobe Animate, Clip Studio Paint, Procreate
-        </p>
+        </div>
       </div>
 
       <div className="body_content_text">
-        <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
+        <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Experience</h2>
           <hr />
           <b>
@@ -102,18 +103,18 @@ const Resume = () => {
               use of the Google Maps API.
             </li>
           </ul>
-        </p>
+        </div>
       </div>
 
       <div className="body_content_text">
-        <p style={{fontFamily: "sans-serif", textAlign: "left"}}>
+        <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Education</h2>
           <hr />
           <b>
             University of South Carolina, Columbia SC - Bachelor of Science in
             Computer Science, Minor in Media Arts (2018)
           </b>
-        </p>
+        </div>
       </div>
     </div>
   );
