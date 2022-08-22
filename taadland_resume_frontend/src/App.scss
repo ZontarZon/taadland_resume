@@ -49,17 +49,20 @@ code {
 #body_content_container {
   width: 100%;
   margin: auto;
-  margin-top: 70px;
+  //margin-top: 70px;
   padding-bottom: 10px;
   height: fit-content;
   border-radius: 0px 0px 10px 10px;
 }
 
 .body_content_text {
-  //background-color: rgba(95, 71, 122, 0.8);
-  background-color: rgb(98 81 117);
+  background-color: rgba(95, 71, 122, 0.8);
+  //background-color: rgb(98 81 117);
   padding: 10px;
-  margin-bottom: 20px;
+  margin: 20px auto 10px auto;
+  width: 80%;
+  border-radius: 10px;
+
   ul {
     font-weight: lighter;
   }
@@ -95,4 +98,11 @@ hr:after {
     bottom: -5px;
     right: -5px;
 }
+}
+
+@media screen and (max-width: 900px) {
+  .body_content_text {
+    width: 100%;
+    border-radius: 0;
+  }
 }
