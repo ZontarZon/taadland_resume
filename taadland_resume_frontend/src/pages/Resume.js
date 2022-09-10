@@ -1,25 +1,37 @@
 import React from "react";
+import {FaDownload} from "react-icons/fa";
 import BodyContentHeader from "../common/BodyContentHeader";
-
+import Pdf from "../TAadland_Resume.pdf";
 const Resume = () => {
   return (
     <div>
       <BodyContentHeader
         headerTitle="Resume"
-        headerSubtitle=""
+        headerSubtitle="Status: Open to work"
         imgSrc="planet_dark.svg"
         imgAlt="planet dark mode"
       />
 
       <div className="body_content_text">
+      <div
+            className="contact_info"
+            style={{width: "fit-content", margin: "auto"}}
+          >
+            <FaDownload />
+            <a href={Pdf} rel="noopener noreferrer" target="_blank">
+              Download PDF
+            </a>
+          </div>
+
         <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
           <h2>Technical Skills</h2>
           <hr />
-          <b>Programming:</b> React, Javascript, Node, Django, Python
+          <b>Programming:</b> React, Javascript, Django, Python
           <br />
           <b>Web Development:</b> HTML, CSS, Sass
           <br />
-          <b>Tools:</b> Git, GitHub, npm, Yarn, DigitalOcean, PostgreSQL
+          <b>Tools:</b> Git, GitHub, npm, Yarn, DigitalOcean, PostgreSQL,
+          Three.js
           <br />
           <b>DevOps Software:</b> Figma, Lucidchart, Jira, Trello
           <br />
@@ -38,14 +50,19 @@ const Resume = () => {
           </b>
           <ul>
             <li>
-              Designed and developed web interfaces to accompany the ABii robot,
-              a smart robot tutor for assisting children with math, language
-              arts, and SEL skills.
+              Designed and developed web interfaces with Django to accompany the
+              ABii robot, a smart robot tutor for assisting children with math,
+              language arts, and SEL skills.
             </li>
             <li>
-              Designed and developed a lesson creation tool to allow teachers to
-              create custom lessons for ABii and export them to the robot for
-              use in classrooms.
+              Designed and developed a lesson creation tool using React.js,
+              allowing teachers to create custom lessons for ABii and export
+              them to the robot for use in classrooms.
+            </li>
+            <li>
+              Designed and developed an image creation web app using React.js
+              and Three.js, allowing teachers to create illustrations and
+              diagrams for their custom lessons.
             </li>
             <li>
               Ensured mobile compatibility with ABii through mobile-first design
@@ -53,7 +70,7 @@ const Resume = () => {
             </li>
             <li>
               Created wireframes and flowcharts for drafting new development
-              projects.
+              projects with Figma and LucidChart.
             </li>
             <li>
               Assisted other developers in project testing phases through GitHub
@@ -61,7 +78,7 @@ const Resume = () => {
             </li>
             <li>
               Provided hundreds of raster and vector illustrations for
-              tutorials, assessments, and stories.
+              tutorials, assessments, and stories using Adobe Illustrator.
             </li>
             <li>
               Animated characters in Adobe Animate and exported them to HTML

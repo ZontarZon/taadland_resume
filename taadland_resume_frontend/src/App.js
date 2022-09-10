@@ -2,6 +2,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import './App.scss';
 import Header from "./common/Header";
 import About from "./pages/About";
+import Gallery from "./pages/Gallery";
 import Landing from "./pages/Landing";
 import Resume from "./pages/Resume";
 
@@ -19,6 +20,7 @@ function App() {
               <Route index element={<Landing />} />
               <Route path="/about" element={<About />} />
               <Route path="/resume" element={<Resume />} />
+              <Route path="/gallery" element={<Gallery />} />
             </Routes>
           </BrowserRouter>
         </div>

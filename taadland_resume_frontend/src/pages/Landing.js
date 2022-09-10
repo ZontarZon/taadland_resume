@@ -1,5 +1,5 @@
 import React from "react";
-import {FaEnvelope, FaLinkedin} from "react-icons/fa";
+import {FaCode, FaEnvelope, FaLinkedin} from "react-icons/fa";
 import "./Landing.scss";
 const Landing = () => {
   return (
@@ -15,6 +15,7 @@ const Landing = () => {
             Front-end web developer. UI designer. Digital artist. Cats.
           </h3>
           <div id="contact_info_container">
+
         <div className="contact_info">
           <FaEnvelope />
           <a href="mailto:thoryagudrun@gmail.com">Email</a>
@@ -26,6 +27,14 @@ const Landing = () => {
             LinkedIn
           </a>
         </div>
+
+        <div className="contact_info">
+          <FaCode/>
+          <a href="https://stackoverflow.com/users/9457623/">
+            Stackoverflow
+          </a>
+        </div>
+
       </div>
         </div>
         <div id="landing_header_img_container">
