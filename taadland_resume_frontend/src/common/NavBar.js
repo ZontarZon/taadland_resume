@@ -1,5 +1,5 @@
 import React from "react";
-import {FaHouseUser, FaList, FaQuestion} from "react-icons/fa";
+import {FaGamepad, FaHouseUser, FaList, FaQuestion} from "react-icons/fa";
 
 const NavBar = ({openNavSideBar}) => {
   return (
@@ -29,6 +29,13 @@ const NavBar = ({openNavSideBar}) => {
         <FaPalette />
         <p>Art Gallery</p>
   </a>*/}
+      <a
+        href="/game"
+        className="nav_btn border-gradient border-gradient-purple"
+      >
+        <FaGamepad />
+        <p>Play with Space Cats</p>
+      </a>
     </div>
   );
 };

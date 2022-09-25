@@ -1,0 +1,27 @@
+import React from "react";
+import {PerspectiveCamera, Scene} from "three";
+import "./FunWithTeila.scss";
+import PlayArea from "./PlayArea";
+
+const FunWithTeila = () => {
+  const fov = 90; // AKA Field of View
+  const aspect = 1;
+  const near = 0.1; // the near clipping plane
+  const far = 800; // the far clipping plane
+  const camera = new PerspectiveCamera(fov, aspect, near, far);
+
+  // every object is initially created at ( 0, 0, 0 )
+  // move the camera back so we can view the scene
+  camera.position.set(0, 400, 800);
+  const scene = new Scene();
+
+  return (
+    <div id="canvas_container">
+      <PlayArea camera={camera} scene={scene}>
+        <canvas id="canvas"></canvas>
+      </PlayArea>
+    </div>
+  );
+};
+
+export default FunWithTeila;
