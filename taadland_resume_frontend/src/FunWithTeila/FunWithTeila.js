@@ -4,15 +4,16 @@ import "./FunWithTeila.scss";
 import PlayArea from "./PlayArea";
 
 const FunWithTeila = () => {
-  const fov = 90; // AKA Field of View
-  const aspect = 1;
+  const fov = 25; // AKA Field of View
+  const aspect = 800/600;
   const near = 0.1; // the near clipping plane
-  const far = 800; // the far clipping plane
+  const far = 4800; // the far clipping plane
   const camera = new PerspectiveCamera(fov, aspect, near, far);
-
+  
   // every object is initially created at ( 0, 0, 0 )
   // move the camera back so we can view the scene
-  camera.position.set(0, 400, 800);
+  camera.position.set(0, 800, 1500);
+  camera.lookAt(0,0,0);
   const scene = new Scene();
 
   return (
