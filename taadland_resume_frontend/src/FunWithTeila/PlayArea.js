@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useRef} from "react";
+import React, {createRef, useEffect, useRef, useState} from "react";
 import {
   DoubleSide,
   Mesh,
@@ -11,11 +11,17 @@ import {
 } from "three";
 
 const PlayArea = ({scene, camera, children}) => {
+  const [playerPos, setPlayerPos] = useState({x: 0, z: 0});
+  const [mouseDown, setMouseDown] = useState(false);
+  const [mouseUp, setMouseUp] = useState(false);
+  const [mouseLeft, setMouseLeft] = useState(false);
+  const [mouseRight, setMouseRight] = useState(false);
+  const [animateRunning, setAnimateRunning] = useState(false);
   const playArea = createRef();
   const renderer = useRef(null);
   let container;
 
-  const draw = () => {
+  const render = () => {
     if (renderer.current) {
       renderer.current.render(scene, camera);
       return null;
@@ -24,8 +30,15 @@ const PlayArea = ({scene, camera, children}) => {
 
   const animate = () => {
     requestAnimationFrame(animate);
-    draw();
+    render();
   };
+
+  useEffect(() => {
+    let char = scene.getObjectByName("characterMesh");
+    if (!playerPos || !char) return;
+    char.position.set(playerPos.x, 50, playerPos.z);
+    //scene.add(char);
+  }, [playerPos]);
 
   const createRenderer = () => {
     const container = document.querySelector("#canvas");
@@ -37,12 +50,17 @@ const PlayArea = ({scene, camera, children}) => {
     });
     scene.background = null;
     renderer.current.setSize(800, 600);
-    draw();
+    //draw();
   };
 
   useEffect(() => {
     if (!container) {
-      createRenderer(renderer, scene, draw);
+      createRenderer(renderer, scene, render);
+    }
+
+    if (!animateRunning) {
+      animate();
+      setAnimateRunning(true);
     }
 
     let groundTexture = new TextureLoader().load("floor_texture.png");
@@ -69,12 +87,51 @@ const PlayArea = ({scene, camera, children}) => {
       side: DoubleSide,
       transparent: true,
     });
+    let char = scene.getObjectByName("characterMesh");
+    if (char) return;
     const characterGeometry = new PlaneGeometry(100, 100);
     const characterMesh = new Mesh(characterGeometry, characterMaterial);
-    characterMesh.position.set(400, 50, 0);
-    //characterMesh.rotation.x = 5*Math.PI / 3;
+    characterMesh.position.set(0, 50, 0);
+    characterMesh.name = "characterMesh";
     scene.add(characterMesh);
   }, []);
+
+  function useInterval(callback, delay) {
+    const savedCallback = useRef();
+  
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
+
+  const onMouseDown = () => {
+    if (mouseDown) {
+      if (playerPos.z >= 350) return;
+      setPlayerPos({x: playerPos.x, z: playerPos.z + 15});
+    } else if (mouseUp) {
+      if (playerPos.z <= -350) return;
+      setPlayerPos({x: playerPos.x, z: playerPos.z - 15});
+    } else if (mouseLeft) {
+      if (playerPos.x <= -350) return;
+      setPlayerPos({x: playerPos.x - 15, z: playerPos.z});
+    } else if (mouseRight) {
+      if (playerPos.x >= 350) return;
+      setPlayerPos({x: playerPos.x + 15, z: playerPos.z});
+    }
+  };
+
+  useInterval(onMouseDown, mouseDown || mouseUp || mouseLeft || mouseRight ? 50 : null);
+  
 
   useEffect(() => {
     if (scene) {
@@ -82,10 +139,52 @@ const PlayArea = ({scene, camera, children}) => {
     }
   }, [scene]);
 
-  animate();
   return (
-    <div className="play_area" ref={playArea}>
-      {children}
+    <div>
+      <button
+        onMouseDown={() => {
+          setMouseDown(true);
+        }}
+        onMouseUp={() => {
+          setMouseDown(false);
+        }}
+      >
+        Down
+      </button>
+      <button
+        onMouseDown={() => {
+          setMouseUp(true);
+        }}
+        onMouseUp={() => {
+          setMouseUp(false);
+        }}
+      >
+        Up
+      </button>
+      <button
+        onMouseDown={() => {
+          setMouseLeft(true);
+        }}
+        onMouseUp={() => {
+          setMouseLeft(false);
+        }}
+      >
+        Left
+      </button>
+      <button
+        onMouseDown={() => {
+          console.log('right');
+          setMouseRight(true);
+        }}
+        onMouseUp={() => {
+          setMouseRight(false);
+        }}
+      >
+        Right
+      </button>
+      <div className="play_area" ref={playArea}>
+        {children}
+      </div>
     </div>
   );
 };
