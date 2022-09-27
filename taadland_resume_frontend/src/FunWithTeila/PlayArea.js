@@ -1,15 +1,10 @@
 import React, {createRef, useEffect, useRef, useState} from "react";
+import {WebGLRenderer} from "three";
 import {
-  DoubleSide,
-  Mesh,
-  MeshBasicMaterial,
-  PlaneGeometry,
-  RepeatWrapping,
-  sRGBEncoding,
-  TextureLoader,
-  WebGLRenderer
-} from "three";
-
+  initializeCharacter,
+  initializeFallingObject,
+  initializeFloor,
+} from "./Utilities/InitializeObjectFuncs";
 const PlayArea = ({scene, camera, children}) => {
   const [playerPos, setPlayerPos] = useState({x: 0, z: 0});
   const [mouseDown, setMouseDown] = useState(false);
@@ -17,6 +12,8 @@ const PlayArea = ({scene, camera, children}) => {
   const [mouseLeft, setMouseLeft] = useState(false);
   const [mouseRight, setMouseRight] = useState(false);
   const [animateRunning, setAnimateRunning] = useState(false);
+  const [gameInProgress, setGameInProgress] = useState(false);
+
   const playArea = createRef();
   const renderer = useRef(null);
   let container;
@@ -37,7 +34,6 @@ const PlayArea = ({scene, camera, children}) => {
     let char = scene.getObjectByName("characterMesh");
     if (!playerPos || !char) return;
     char.position.set(playerPos.x, 50, playerPos.z);
-    //scene.add(char);
   }, [playerPos]);
 
   const createRenderer = () => {
@@ -50,7 +46,6 @@ const PlayArea = ({scene, camera, children}) => {
     });
     scene.background = null;
     renderer.current.setSize(800, 600);
-    //draw();
   };
 
   useEffect(() => {
@@ -58,51 +53,25 @@ const PlayArea = ({scene, camera, children}) => {
       createRenderer(renderer, scene, render);
     }
 
+    let floorMesh = initializeFloor(scene);
+    if (floorMesh) scene.add(floorMesh);
+
+    let characterMesh = initializeCharacter(scene);
+    if (characterMesh) scene.add(characterMesh);
+
     if (!animateRunning) {
       animate();
       setAnimateRunning(true);
     }
-
-    let groundTexture = new TextureLoader().load("floor_texture.png");
-    groundTexture.wrapS = groundTexture.wrapT = RepeatWrapping;
-    groundTexture.repeat.set(8, 8);
-    groundTexture.encoding = sRGBEncoding;
-    let groundMaterial = new MeshBasicMaterial({
-      map: groundTexture,
-      side: DoubleSide,
-    });
-    const groundGeometry = new PlaneGeometry(800, 800);
-    const floorMesh = new Mesh(groundGeometry, groundMaterial);
-    floorMesh.position.set(0, 0, 0);
-    floorMesh.rotation.x = Math.PI / 2;
-
-    floorMesh.name = "floorMesh";
-    scene.add(floorMesh);
-
-    // playable char init
-    let characterTexture = new TextureLoader().load("cat.png");
-    characterTexture.encoding = sRGBEncoding;
-    let characterMaterial = new MeshBasicMaterial({
-      map: characterTexture,
-      side: DoubleSide,
-      transparent: true,
-    });
-    let char = scene.getObjectByName("characterMesh");
-    if (char) return;
-    const characterGeometry = new PlaneGeometry(100, 100);
-    const characterMesh = new Mesh(characterGeometry, characterMaterial);
-    characterMesh.position.set(0, 50, 0);
-    characterMesh.name = "characterMesh";
-    scene.add(characterMesh);
   }, []);
 
   function useInterval(callback, delay) {
     const savedCallback = useRef();
-  
+
     useEffect(() => {
       savedCallback.current = callback;
     }, [callback]);
-  
+
     useEffect(() => {
       function tick() {
         savedCallback.current();
@@ -130,8 +99,40 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
-  useInterval(onMouseDown, mouseDown || mouseUp || mouseLeft || mouseRight ? 50 : null);
-  
+  const spawnFallingObject = () => {
+    let newObjects = initializeFallingObject();
+    let newFallingObj = newObjects.fallingObj;
+    let newFallingObjShadow = newObjects.shadow;
+    scene.add(newFallingObj);
+    console.log('adding shadow', newFallingObjShadow);
+    scene.add(newFallingObjShadow);
+  };
+
+  useInterval(
+    onMouseDown,
+    mouseDown || mouseUp || mouseLeft || mouseRight ? 50 : null
+  );
+
+  useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
+
+  const moveFallingObjectsDown = () => {
+    for (let i = 0; i < scene.children.length; i++) {
+      if (scene.children[i].objectType === "fallingObj") {
+        let obj = scene.getObjectByName(scene.children[i].name);
+        let shadow = scene.getObjectByName(scene.children[i].shadowName);
+        obj.position.set(obj.position.x, obj.position.y - 5, obj.position.z);
+        if (obj.position.y <= 0) {
+          console.log(obj.shadowName);
+          //let shadow = scene.getObjectByName(obj.shadowName);
+          console.log(shadow);
+          scene.remove(scene.getObjectByName(obj.shadowName));
+          scene.remove(obj);
+        };
+      }
+    }
+  };
+
+  useInterval(moveFallingObjectsDown, gameInProgress ? 100 : null);
 
   useEffect(() => {
     if (scene) {
@@ -173,7 +174,7 @@ const PlayArea = ({scene, camera, children}) => {
       </button>
       <button
         onMouseDown={() => {
-          console.log('right');
+          console.log("right");
           setMouseRight(true);
         }}
         onMouseUp={() => {
@@ -185,6 +186,8 @@ const PlayArea = ({scene, camera, children}) => {
       <div className="play_area" ref={playArea}>
         {children}
       </div>
+      <button onClick={() => setGameInProgress(true)}>Start Game</button>
+      <button onClick={() => setGameInProgress(false)}>End Game</button>
     </div>
   );
 };
