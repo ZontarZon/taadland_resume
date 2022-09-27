@@ -104,7 +104,6 @@ const PlayArea = ({scene, camera, children}) => {
     let newFallingObj = newObjects.fallingObj;
     let newFallingObjShadow = newObjects.shadow;
     scene.add(newFallingObj);
-    console.log('adding shadow', newFallingObjShadow);
     scene.add(newFallingObjShadow);
   };
 
@@ -113,26 +112,31 @@ const PlayArea = ({scene, camera, children}) => {
     mouseDown || mouseUp || mouseLeft || mouseRight ? 50 : null
   );
 
-  useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
+  useInterval(spawnFallingObject, gameInProgress ? 3000 : null);
 
   const moveFallingObjectsDown = () => {
     for (let i = 0; i < scene.children.length; i++) {
       if (scene.children[i].objectType === "fallingObj") {
-        let obj = scene.getObjectByName(scene.children[i].name);
-        let shadow = scene.getObjectByName(scene.children[i].shadowName);
-        obj.position.set(obj.position.x, obj.position.y - 5, obj.position.z);
-        if (obj.position.y <= 0) {
-          console.log(obj.shadowName);
-          //let shadow = scene.getObjectByName(obj.shadowName);
-          console.log(shadow);
-          scene.remove(scene.getObjectByName(obj.shadowName));
-          scene.remove(obj);
-        };
+        let fallingObj = scene.getObjectByName(scene.children[i].name);
+        let shadowObj = scene.getObjectByName(fallingObj.shadowName);
+        fallingObj.position.set(
+          fallingObj.position.x,
+          fallingObj.position.y - 2,
+          fallingObj.position.z
+        );
+
+        let percentDistanceFallen = 1 - fallingObj.position.y / 600;
+        let newRadiusScale = 1 + percentDistanceFallen * 11;
+        shadowObj.scale.set(newRadiusScale, newRadiusScale, newRadiusScale);
+        if (fallingObj.position.y <= 15) {
+          scene.remove(shadowObj);
+          scene.remove(fallingObj);
+        }
       }
     }
   };
 
-  useInterval(moveFallingObjectsDown, gameInProgress ? 100 : null);
+  useInterval(moveFallingObjectsDown, gameInProgress ? 50 : null);
 
   useEffect(() => {
     if (scene) {
@@ -143,43 +147,26 @@ const PlayArea = ({scene, camera, children}) => {
   return (
     <div>
       <button
-        onMouseDown={() => {
-          setMouseDown(true);
-        }}
-        onMouseUp={() => {
-          setMouseDown(false);
-        }}
+        onMouseDown={() => setMouseDown(true)}
+        onMouseUp={() => setMouseDown(false)}
       >
         Down
       </button>
       <button
-        onMouseDown={() => {
-          setMouseUp(true);
-        }}
-        onMouseUp={() => {
-          setMouseUp(false);
-        }}
+        onMouseDown={() => setMouseUp(true)}
+        onMouseUp={() => setMouseUp(false)}
       >
         Up
       </button>
       <button
-        onMouseDown={() => {
-          setMouseLeft(true);
-        }}
-        onMouseUp={() => {
-          setMouseLeft(false);
-        }}
+        onMouseDown={() => setMouseLeft(true)}
+        onMouseUp={() => setMouseLeft(false)}
       >
         Left
       </button>
       <button
-        onMouseDown={() => {
-          console.log("right");
-          setMouseRight(true);
-        }}
-        onMouseUp={() => {
-          setMouseRight(false);
-        }}
+        onMouseDown={() => setMouseRight(true)}
+        onMouseUp={() => setMouseRight(false)}
       >
         Right
       </button>

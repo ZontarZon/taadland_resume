@@ -56,41 +56,23 @@ export const getRandomIntInRange = (minInt, maxInt) => {
   return randomNum;
 };
 
-
-
-
 const initializeShadowObject = (xPos, zPos, fallingObjectName) => {
-
-  let radius = 25;
+  let radius = 2;
   let segments = 64;
-  //material = new MeshBasicMaterial( { color: 0x0000ff } );
-  //geometry = CircleGeometry( radius, segments );
-
-
-/*
-  let shadowMaterial = new MeshBasicMaterial({
-    side: DoubleSide,
-    color: 0x00ff00,
-  });
-  */
- let shadowMaterial = new MeshBasicMaterial( { color: 0xffff00 } );
-  //const shadowGeometry = new PlaneGeometry(50, 50);
+ let shadowMaterial = new MeshBasicMaterial( { color: 0x000000 } );
   let shadowGeometry = new CircleGeometry( radius, segments );
   const shadowMesh = new Mesh(shadowGeometry, shadowMaterial);
   shadowMesh.position.set(xPos, 1, zPos);
   shadowMesh.rotation.x = (3*Math.PI) / 2;
-
   shadowMesh.objectType = "fallingObjShadow";
-  shadowMesh.name = `${Math.random().toString(36).substring(2,22)}`; // unique name
+  // unique name
+  shadowMesh.name = `${Math.random().toString(36).substring(2,22)}`;
   shadowMesh.fallingObjectName = fallingObjectName;
   return shadowMesh;
 };
 
-
-
-
 export const initializeFallingObject = () => {
-  let randomNum = getRandomIntInRange(1, 6);
+  let randomNum = getRandomIntInRange(1, 5);
   let objTexture = new TextureLoader().load(`falling_obj_sprite_${randomNum}.png`);
   objTexture.encoding = sRGBEncoding;
   let objMaterial = new MeshBasicMaterial({
@@ -103,14 +85,12 @@ export const initializeFallingObject = () => {
   const objMesh = new Mesh(objGeometry, objMaterial);
   const randomX = getRandomIntInRange(-350, 350);
   const randomZ = getRandomIntInRange(-350, 350);
-
-  objMesh.position.set(randomX, 800, randomZ);
-  //objMesh.name = "falling_ob";
+  objMesh.position.set(randomX, 500, randomZ);
   objMesh.objectType = "fallingObj";
-  objMesh.name = `${Math.random().toString(36).substring(2,22)}`; // unique name
+  // unique name
+  objMesh.name = `${Math.random().toString(36).substring(2,22)}`;
 
   let shadowObj = initializeShadowObject(randomX, randomZ, objMesh.name);
   objMesh.shadowName = shadowObj.name;
-  console.log(objMesh, shadowObj);
   return {fallingObj: objMesh, shadow: shadowObj};
 };
