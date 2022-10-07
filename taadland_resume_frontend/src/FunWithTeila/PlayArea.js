@@ -1,12 +1,11 @@
 import React, {createRef, useEffect, useRef, useState} from "react";
-import {WebGLRenderer} from "three";
+import {WebGLRenderer, Clock} from "three";
 import {
   initializeCharacter,
   initializeFallingObject,
   initializeFloor,
 } from "./Utilities/InitializeObjectFuncs";
 const PlayArea = ({scene, camera, children}) => {
-  const [playerPos, setPlayerPos] = useState({x: 0, z: 0});
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseUp, setMouseUp] = useState(false);
   const [mouseLeft, setMouseLeft] = useState(false);
@@ -16,7 +15,19 @@ const PlayArea = ({scene, camera, children}) => {
 
   const playArea = createRef();
   const renderer = useRef(null);
+
+  const KEYCODES = {
+    w: 87,
+    a: 65,
+    s: 83,
+    d: 68,
+  };
   let container;
+  var clock = new Clock();
+  var speed = 50; //units a second
+  var playerSpeed = 15;
+  var delta = 0;
+  var playerDelta = 0;
 
   const render = () => {
     if (renderer.current) {
@@ -26,15 +37,60 @@ const PlayArea = ({scene, camera, children}) => {
   };
 
   const animate = () => {
+    if (renderer.current.gameInProgress) moveFallingObjectsDown();
     requestAnimationFrame(animate);
+
     render();
   };
 
-  useEffect(() => {
-    let char = scene.getObjectByName("characterMesh");
-    if (!playerPos || !char) return;
-    char.position.set(playerPos.x, 50, playerPos.z);
-  }, [playerPos]);
+  const onWindowResize = () => {
+    if (renderer.current) renderer.current.setSize(window.innerWidth, 600);
+    render();
+  };
+
+  const onKeyDown = (event) => {
+    //playerDelta = clock.getDelta();
+    switch (event.keyCode) {
+      case KEYCODES.w:
+        setMouseUp(true)
+        break;
+      case KEYCODES.a:
+        setMouseLeft(true)
+        break;
+      case KEYCODES.s:
+        setMouseDown(true)
+        break;
+      case KEYCODES.d:
+        setMouseRight(true)
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onKeyUp = (event) => {
+    //playerDelta = clock.getDelta();
+    switch (event.keyCode) {
+      case KEYCODES.w:
+        setMouseUp(false)
+        break;
+      case KEYCODES.a:
+        setMouseLeft(false)
+        break;
+      case KEYCODES.s:
+        setMouseDown(false)
+        break;
+      case KEYCODES.d:
+        setMouseRight(false)
+        break;
+      default:
+        break;
+    }
+  };
+
+  window.addEventListener("resize", onWindowResize, false);
+  document.addEventListener("keydown", onKeyDown, false);
+  document.addEventListener("keyup", onKeyUp, false);
 
   const createRenderer = () => {
     const container = document.querySelector("#canvas");
@@ -45,7 +101,7 @@ const PlayArea = ({scene, camera, children}) => {
       alpha: true,
     });
     scene.background = null;
-    renderer.current.setSize(800, 600);
+    renderer.current.setSize(window.innerWidth, 600);
   };
 
   useEffect(() => {
@@ -84,18 +140,19 @@ const PlayArea = ({scene, camera, children}) => {
   }
 
   const onMouseDown = () => {
+    let char = scene.getObjectByName("characterMesh");
     if (mouseDown) {
-      if (playerPos.z >= 350) return;
-      setPlayerPos({x: playerPos.x, z: playerPos.z + 15});
+      if (char.position.z >= 350) return;
+      char.translateZ(15);
     } else if (mouseUp) {
-      if (playerPos.z <= -350) return;
-      setPlayerPos({x: playerPos.x, z: playerPos.z - 15});
+      if (char.position.z <= -350) return;
+      char.translateZ(-15);
     } else if (mouseLeft) {
-      if (playerPos.x <= -350) return;
-      setPlayerPos({x: playerPos.x - 15, z: playerPos.z});
+      if (char.position.x <= -350) return;
+      char.translateX(-15);
     } else if (mouseRight) {
-      if (playerPos.x >= 350) return;
-      setPlayerPos({x: playerPos.x + 15, z: playerPos.z});
+      if (char.position.x >= 350) return;
+      char.translateX(15);
     }
   };
 
@@ -107,23 +164,42 @@ const PlayArea = ({scene, camera, children}) => {
     scene.add(newFallingObjShadow);
   };
 
+  const clearFallingObjects = () => {
+    let objectsToRemove = [];
+    for (let i = 0; i < scene.children.length; i++) {
+      if (scene.children[i].objectType === "fallingObj") {
+        objectsToRemove.push(scene.children[i].name);
+        objectsToRemove.push(scene.children[i].shadowName);
+      }
+    }
+    console.log(objectsToRemove);
+    for (let a = 0; a < objectsToRemove.length; a++) {
+      scene.remove(scene.getObjectByName(objectsToRemove[a]));
+    }
+  };
+
   useInterval(
     onMouseDown,
     mouseDown || mouseUp || mouseLeft || mouseRight ? 50 : null
   );
 
-  useInterval(spawnFallingObject, gameInProgress ? 3000 : null);
+  useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
 
   const moveFallingObjectsDown = () => {
+    console.log("MOVING OBJECTS");
+    delta = clock.getDelta();
+
     for (let i = 0; i < scene.children.length; i++) {
       if (scene.children[i].objectType === "fallingObj") {
         let fallingObj = scene.getObjectByName(scene.children[i].name);
+        if (!fallingObj.frames) fallingObj.frames = 0;
         let shadowObj = scene.getObjectByName(fallingObj.shadowName);
-        fallingObj.position.set(
-          fallingObj.position.x,
-          fallingObj.position.y - 2,
-          fallingObj.position.z
-        );
+        let objNewPos = fallingObj.position.clone();
+        objNewPos.x = fallingObj.position.x;
+        objNewPos.y = 0;
+        objNewPos.z = fallingObj.position.z;
+
+        fallingObj.translateY(-(speed * delta));
 
         let percentDistanceFallen = 1 - fallingObj.position.y / 600;
         let newRadiusScale = 1 + percentDistanceFallen * 11;
@@ -136,7 +212,7 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
-  useInterval(moveFallingObjectsDown, gameInProgress ? 50 : null);
+  //useInterval(moveFallingObjectsDown, gameInProgress ? 50 : null);
 
   useEffect(() => {
     if (scene) {
@@ -173,8 +249,24 @@ const PlayArea = ({scene, camera, children}) => {
       <div className="play_area" ref={playArea}>
         {children}
       </div>
-      <button onClick={() => setGameInProgress(true)}>Start Game</button>
-      <button onClick={() => setGameInProgress(false)}>End Game</button>
+      <button
+        onClick={() => {
+          setGameInProgress(true);
+          console.log("STARTING GAME");
+          if (renderer.current) renderer.current.gameInProgress = true;
+        }}
+      >
+        Start Game
+      </button>
+      <button
+        onClick={() => {
+          setGameInProgress(false);
+          if (renderer.current) renderer.current.gameInProgress = false;
+          clearFallingObjects();
+        }}
+      >
+        End Game
+      </button>
     </div>
   );
 };
