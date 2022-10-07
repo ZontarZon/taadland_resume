@@ -1,10 +1,17 @@
-import React, {createRef, useEffect, useRef, useState} from "react";
-import {WebGLRenderer, Clock} from "three";
+import React, {useEffect, useRef, useState} from "react";
+import {
+  FaArrowDown,
+  FaArrowLeft,
+  FaArrowRight,
+  FaArrowUp,
+} from "react-icons/fa";
+import {WebGLRenderer, Clock, Raycaster, Vector3, TextureLoader} from "three";
 import {
   initializeCharacter,
   initializeFallingObject,
   initializeFloor,
 } from "./Utilities/InitializeObjectFuncs";
+
 const PlayArea = ({scene, camera, children}) => {
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseUp, setMouseUp] = useState(false);
@@ -12,10 +19,8 @@ const PlayArea = ({scene, camera, children}) => {
   const [mouseRight, setMouseRight] = useState(false);
   const [animateRunning, setAnimateRunning] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
-
-  const playArea = createRef();
   const renderer = useRef(null);
-
+  const raycaster = new Raycaster();
   const KEYCODES = {
     w: 87,
     a: 65,
@@ -24,8 +29,9 @@ const PlayArea = ({scene, camera, children}) => {
   };
   let container;
   var clock = new Clock();
-  var speed = 50; //units a second
-  var playerSpeed = 15;
+  var playerClock = new Clock();
+  var speed = 50;
+  var playerSpeed = 300;
   var delta = 0;
   var playerDelta = 0;
 
@@ -37,7 +43,10 @@ const PlayArea = ({scene, camera, children}) => {
   };
 
   const animate = () => {
-    if (renderer.current.gameInProgress) moveFallingObjectsDown();
+    if (renderer.current.gameInProgress) {
+      moveFallingObjectsDown();
+      checkForCollisions();
+    }
     requestAnimationFrame(animate);
 
     render();
@@ -48,49 +57,32 @@ const PlayArea = ({scene, camera, children}) => {
     render();
   };
 
-  const onKeyDown = (event) => {
-    //playerDelta = clock.getDelta();
-    switch (event.keyCode) {
-      case KEYCODES.w:
-        setMouseUp(true)
-        break;
-      case KEYCODES.a:
-        setMouseLeft(true)
-        break;
-      case KEYCODES.s:
-        setMouseDown(true)
-        break;
-      case KEYCODES.d:
-        setMouseRight(true)
-        break;
-      default:
-        break;
+  const onKeyPress = (event) => {
+    let char = scene.getObjectByName("characterMesh");
+    if (char.currentSprite !== "run" && event.type === "keydown") {
+      let newTexture = new TextureLoader().load("cat_run.png");
+      if (event.keyCode === KEYCODES.a) char.scale.x = -1;
+      else if (event.keyCode === KEYCODES.d) char.scale.x = 1;
+      char.material.map = newTexture;
+      char.currentSprite = "run";
+    } else if (char.currentSprite !== "idle" && event.type === "keyup") {
+      let newTexture = new TextureLoader().load("cat_idle.png");
+      if (event.keyCode === KEYCODES.a) char.scale.x = -1;
+      else if (event.keyCode === KEYCODES.d) char.scale.x = 1;
+      char.material.map = newTexture;
+      char.currentSprite = "idle";
     }
-  };
 
-  const onKeyUp = (event) => {
-    //playerDelta = clock.getDelta();
-    switch (event.keyCode) {
-      case KEYCODES.w:
-        setMouseUp(false)
-        break;
-      case KEYCODES.a:
-        setMouseLeft(false)
-        break;
-      case KEYCODES.s:
-        setMouseDown(false)
-        break;
-      case KEYCODES.d:
-        setMouseRight(false)
-        break;
-      default:
-        break;
-    }
+    let change = event.type === "keydown";
+    if (event.keyCode === KEYCODES.w) setMouseUp(change);
+    else if (event.keyCode === KEYCODES.a) setMouseLeft(change);
+    else if (event.keyCode === KEYCODES.s) setMouseDown(change);
+    else if (event.keyCode === KEYCODES.d) setMouseRight(change);
   };
 
   window.addEventListener("resize", onWindowResize, false);
-  document.addEventListener("keydown", onKeyDown, false);
-  document.addEventListener("keyup", onKeyUp, false);
+  document.addEventListener("keydown", onKeyPress, false);
+  document.addEventListener("keyup", onKeyPress, false);
 
   const createRenderer = () => {
     const container = document.querySelector("#canvas");
@@ -141,18 +133,48 @@ const PlayArea = ({scene, camera, children}) => {
 
   const onMouseDown = () => {
     let char = scene.getObjectByName("characterMesh");
+
+    playerDelta = playerClock.getDelta();
     if (mouseDown) {
       if (char.position.z >= 350) return;
-      char.translateZ(15);
+      char.translateZ(playerSpeed * playerDelta);
     } else if (mouseUp) {
       if (char.position.z <= -350) return;
-      char.translateZ(-15);
+      char.translateZ(-(playerSpeed * playerDelta));
     } else if (mouseLeft) {
       if (char.position.x <= -350) return;
-      char.translateX(-15);
+      char.translateX(-(playerSpeed * playerDelta));
     } else if (mouseRight) {
       if (char.position.x >= 350) return;
-      char.translateX(15);
+      char.translateX(playerSpeed * playerDelta);
+    }
+    console.log(char);
+  };
+
+  const checkForCollisions = () => {
+    let char = scene.getObjectByName("characterMesh");
+    raycaster.set(
+      char.position,
+      new Vector3()
+        .subVectors(
+          new Vector3(char.position.x, -10, char.position.z),
+          char.position
+        )
+        .normalize()
+    );
+    let intersects = raycaster.intersectObjects(scene.children);
+    for (let i = 0; i < intersects.length; i++) {
+      if (intersects[i].object.objectType === "fallingObjShadow") {
+        let fallingObj = scene.getObjectByName(
+          intersects[i].object.fallingObjectName
+        );
+        if (fallingObj.position.y < 100) {
+          console.log("REMOVING OBJECT");
+          scene.remove(fallingObj);
+          scene.remove(scene.getObjectByName(intersects[i].object.name));
+          return;
+        }
+      }
     }
   };
 
@@ -172,7 +194,6 @@ const PlayArea = ({scene, camera, children}) => {
         objectsToRemove.push(scene.children[i].shadowName);
       }
     }
-    console.log(objectsToRemove);
     for (let a = 0; a < objectsToRemove.length; a++) {
       scene.remove(scene.getObjectByName(objectsToRemove[a]));
     }
@@ -212,8 +233,6 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
-  //useInterval(moveFallingObjectsDown, gameInProgress ? 50 : null);
-
   useEffect(() => {
     if (scene) {
       console.log(scene);
@@ -221,52 +240,59 @@ const PlayArea = ({scene, camera, children}) => {
   }, [scene]);
 
   return (
-    <div>
-      <button
-        onMouseDown={() => setMouseDown(true)}
-        onMouseUp={() => setMouseDown(false)}
-      >
-        Down
-      </button>
-      <button
-        onMouseDown={() => setMouseUp(true)}
-        onMouseUp={() => setMouseUp(false)}
-      >
-        Up
-      </button>
-      <button
-        onMouseDown={() => setMouseLeft(true)}
-        onMouseUp={() => setMouseLeft(false)}
-      >
-        Left
-      </button>
-      <button
-        onMouseDown={() => setMouseRight(true)}
-        onMouseUp={() => setMouseRight(false)}
-      >
-        Right
-      </button>
-      <div className="play_area" ref={playArea}>
-        {children}
+    <div id="game_container">
+      <div id="player_move_btn_grid">
+        <div
+          className="player_move_btn h"
+          onMouseDown={() => setMouseDown(true)}
+          onMouseUp={() => setMouseDown(false)}
+        >
+          <FaArrowDown />
+        </div>
+        <div
+          className="player_move_btn b"
+          onMouseDown={() => setMouseUp(true)}
+          onMouseUp={() => setMouseUp(false)}
+        >
+          <FaArrowUp />
+        </div>
+        <div
+          className="player_move_btn d"
+          onMouseDown={() => setMouseLeft(true)}
+          onMouseUp={() => setMouseLeft(false)}
+        >
+          <FaArrowLeft />
+        </div>
+        <div
+          className="player_move_btn f"
+          onMouseDown={() => setMouseRight(true)}
+          onMouseUp={() => setMouseRight(false)}
+        >
+          <FaArrowRight />
+        </div>
       </div>
-      <button
-        onClick={() => {
-          setGameInProgress(true);
-          console.log("STARTING GAME");
-          if (renderer.current) renderer.current.gameInProgress = true;
-        }}
-      >
-        Start Game
-      </button>
-      <button
-        onClick={() => {
-          setGameInProgress(false);
-          if (renderer.current) renderer.current.gameInProgress = false;
-          clearFallingObjects();
-        }}
-      >
-        End Game
-      </button>
+      <div id="start_end_game_btns_container">
+        <div
+          className="start_end_game_btn"
+          onClick={() => {
+            setGameInProgress(true);
+            console.log("STARTING GAME");
+            if (renderer.current) renderer.current.gameInProgress = true;
+          }}
+        >
+          Start Game
+        </div>
+        <div
+          className="start_end_game_btn"
+          onClick={() => {
+            setGameInProgress(false);
+            if (renderer.current) renderer.current.gameInProgress = false;
+            clearFallingObjects();
+          }}
+        >
+          End Game
+        </div>
+      </div>
     </div>
   );
 };
