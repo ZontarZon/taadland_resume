@@ -5,7 +5,7 @@ import {
   FaArrowRight,
   FaArrowUp,
 } from "react-icons/fa";
-import {WebGLRenderer, Clock, Raycaster, Vector3, TextureLoader} from "three";
+import {WebGLRenderer, Clock, Raycaster, Vector3, TextureLoader, Vector2} from "three";
 import {
   initializeCharacter,
   initializeFallingObject,
@@ -19,8 +19,13 @@ const PlayArea = ({scene, camera, children}) => {
   const [mouseRight, setMouseRight] = useState(false);
   const [animateRunning, setAnimateRunning] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
+  let movingCharToPos = null;
   const renderer = useRef(null);
+
+  const pointer = new Vector2();
+
   const raycaster = new Raycaster();
+
   const KEYCODES = {
     w: 87,
     a: 65,
@@ -47,16 +52,67 @@ const PlayArea = ({scene, camera, children}) => {
       moveFallingObjectsDown();
       checkForCollisions();
     }
+    if (movingCharToPos) loop(movingCharToPos);
+
     requestAnimationFrame(animate);
 
     render();
   };
 
+  let frames = 0;
+  let maxFrames = 400;
+
+  function lerp(a, b, t) {return a + (b - a) * t}
+  function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+
+
+  function loop(b) {
+    let char = scene.getObjectByName("characterMesh");
+
+    if (frames > maxFrames || (char.position.x === b.x && char.position.z === b.z)){
+      frames = 0;
+      return;
+    }
+   let t = frames / maxFrames;
+    var newX = lerp(char.position.x, b.x, ease(t));   // interpolate between a and b where
+    var newZ = lerp(char.position.z, b.z, ease(t));   // function in this example.
+    char.position.set(newX, char.position.y, newZ);  // set new position
+    frames++;
+    //t += dt;
+    //if (t <= 0 || t >=1) dt = -dt;        // ping-pong for demo
+  }
+
+  function onMouseClick( event ) {
+    frames = 0;
+    let canvas = document.querySelector('canvas');
+    pointer.x = ( event.offsetX / canvas.clientWidth ) * 2 - 1;
+    pointer.y = - ( event.offsetY / canvas.clientHeight ) * 2 + 1;
+    //raycaster.setFromCamera(pointer, camera);
+    //const intersects = raycaster.intersectObjects( scene.children );
+    //console.log('intersects', intersects);
+    console.log('pointer', pointer);
+
+    let newCharX = pointer.x * 600;
+    let newCharZ = -(pointer.y * 600);
+    if (newCharX < -350) newCharX = -350;
+    if (newCharX > 350) newCharX = 350;
+    if (newCharZ < -350) newCharZ = -350;
+    if (newCharZ > 350) newCharZ = 350;
+    console.log(newCharX, newCharZ);
+    movingCharToPos = {x: newCharX, z: newCharZ};
+
+
+    playerDelta = playerClock.getDelta();
+    //char.translateZ(playerSpeed * playerDelta);
+
+  }
+  window.addEventListener( 'click', onMouseClick );
+
   const onWindowResize = () => {
     if (renderer.current) renderer.current.setSize(window.innerWidth, 600);
     render();
   };
-
+/*
   const onKeyPress = (event) => {
     let char = scene.getObjectByName("characterMesh");
     if (char.currentSprite !== "run" && event.type === "keydown") {
@@ -79,10 +135,10 @@ const PlayArea = ({scene, camera, children}) => {
     else if (event.keyCode === KEYCODES.s) setMouseDown(change);
     else if (event.keyCode === KEYCODES.d) setMouseRight(change);
   };
-
+*/
   window.addEventListener("resize", onWindowResize, false);
-  document.addEventListener("keydown", onKeyPress, false);
-  document.addEventListener("keyup", onKeyPress, false);
+  //document.addEventListener("keydown", onKeyPress, false);
+  //document.addEventListener("keyup", onKeyPress, false);
 
   const createRenderer = () => {
     const container = document.querySelector("#canvas");
@@ -148,7 +204,6 @@ const PlayArea = ({scene, camera, children}) => {
       if (char.position.x >= 350) return;
       char.translateX(playerSpeed * playerDelta);
     }
-    console.log(char);
   };
 
   const checkForCollisions = () => {
@@ -169,7 +224,6 @@ const PlayArea = ({scene, camera, children}) => {
           intersects[i].object.fallingObjectName
         );
         if (fallingObj.position.y < 100) {
-          console.log("REMOVING OBJECT");
           scene.remove(fallingObj);
           scene.remove(scene.getObjectByName(intersects[i].object.name));
           return;
@@ -207,7 +261,6 @@ const PlayArea = ({scene, camera, children}) => {
   useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
 
   const moveFallingObjectsDown = () => {
-    console.log("MOVING OBJECTS");
     delta = clock.getDelta();
 
     for (let i = 0; i < scene.children.length; i++) {
@@ -233,15 +286,9 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
-  useEffect(() => {
-    if (scene) {
-      console.log(scene);
-    }
-  }, [scene]);
-
   return (
     <div id="game_container">
-      <div id="player_move_btn_grid">
+      {/*<div id="player_move_btn_grid">
         <div
           className="player_move_btn h"
           onMouseDown={() => setMouseDown(true)}
@@ -270,7 +317,7 @@ const PlayArea = ({scene, camera, children}) => {
         >
           <FaArrowRight />
         </div>
-      </div>
+  </div>*/}
       <div id="start_end_game_btns_container">
         <div
           className="start_end_game_btn"
