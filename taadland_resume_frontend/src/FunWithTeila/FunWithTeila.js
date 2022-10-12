@@ -5,8 +5,8 @@ import PlayArea from "./PlayArea";
 const FunWithTeila = () => {
   const fov = 25;
   const aspect = window.innerWidth / 600;
-  const near = 0.1;
-  const far = 4800;
+  const near = 1;
+  const far = 3200;
   const camera = new PerspectiveCamera(fov, aspect, near, far);
 
 window.addEventListener('resize', onWindowResize, false)
