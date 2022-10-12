@@ -1,5 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
-import {WebGLRenderer, Clock, Raycaster, Vector3, Vector2, Mesh, MeshBasicMaterial, SphereGeometry} from "three";
+import {
+  WebGLRenderer,
+  Clock,
+  Raycaster,
+  Vector3,
+  Vector2,
+  TextureLoader,
+} from "three";
+import InstructionsPopup from "./InstructionsPopup";
 import {
   initializeCharacter,
   initializeFallingObject,
@@ -9,6 +17,11 @@ import {
 const PlayArea = ({scene, camera, children}) => {
   const [animateRunning, setAnimateRunning] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  let idleTexture = new TextureLoader().load("cat_idle.png");
+  let runTexture = new TextureLoader().load("cat_run.png");
+
   let movingCharToPos = null;
   const renderer = useRef(null);
   const pointer = new Vector2();
@@ -16,10 +29,8 @@ const PlayArea = ({scene, camera, children}) => {
 
   let container;
   let clock = new Clock();
-  let playerClock = new Clock();
   let speed = 50;
   let delta = 0;
-  let playerDelta = 0;
 
   const render = () => {
     if (renderer.current) {
@@ -39,56 +50,80 @@ const PlayArea = ({scene, camera, children}) => {
   };
 
   let frames = 0;
-  let maxFrames = 400;
+  let maxFrames = 500;
 
-  function lerp(a, b, t) {return a + (b - a) * t}
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
-  function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+  // for a better sliding effect
+  function ease(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
 
   function loop(b) {
     let char = scene.getObjectByName("characterMesh");
 
-    if (frames > maxFrames || (char.position.x === b.x && char.position.z === b.z)){
+    if (
+      frames >= maxFrames ||
+      Math.abs(char.position.x - b.x) <= 0.5 ||
+      Math.abs(char.position.z - b.z) <= 0.5
+    ) {
       frames = 0;
+      if (char.currentSprite !== "walk") {
+        char.material.map = idleTexture;
+        char.currentSprite = "walk";
+      }
       return;
     }
-   let t = frames / maxFrames;
-    var newX = lerp(char.position.x, b.x, ease(t));   // interpolate between a and b where
-    var newZ = lerp(char.position.z, b.z, ease(t));   // function in this example.
-    char.position.set(newX, char.position.y, newZ);  // set new position
+    let t = frames / maxFrames;
+    var newX = lerp(char.position.x, b.x, ease(t));
+    var newZ = lerp(char.position.z, b.z, ease(t));
+    char.position.set(newX, char.position.y, newZ);
     frames++;
   }
 
-  function onMouseClick( event ) {
+  function onMouseClick(event) {
     frames = 0;
-    let canvas = document.querySelector('canvas');
+    let canvas = document.querySelector("canvas");
 
-    pointer.x = ( event.offsetX / canvas.clientWidth ) * 2 - 1;
-    pointer.y = - ( event.offsetY / canvas.clientHeight ) * 2 + 1;
+    pointer.x = (event.offsetX / canvas.clientWidth) * 2 - 1;
+    pointer.y = -(event.offsetY / canvas.clientHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObjects( scene.children );
+    const intersects = raycaster.intersectObjects(scene.children);
     let newCharX = null;
     let newCharZ = null;
     intersects.forEach((value) => {
       if (value.object.name === "floorMesh") {
-        console.log(value);
         newCharX = value.point.x;
         newCharZ = value.point.z;
       }
     });
-    if (!newCharX || !newCharZ) return;
+
+    let char = scene.getObjectByName("characterMesh");
+    if (!newCharX || !newCharZ) {
+      return;
+    } else {
+      char.material.map = runTexture;
+      char.currentSprite = "run";
+      if (char.position.x > newCharX) {
+        if (char.scale.x !== -1) char.scale.x = -1;
+      } else {
+        if (char.scale.x !== 1) char.scale.x = 1;
+      }
+    }
     if (newCharX < -350) newCharX = -350;
     if (newCharX > 350) newCharX = 350;
     if (newCharZ < -350) newCharZ = -350;
     if (newCharZ > 350) newCharZ = 350;
     movingCharToPos = {x: newCharX, z: newCharZ};
-    playerDelta = playerClock.getDelta();
   }
-  window.addEventListener( 'click', onMouseClick );
+  window.addEventListener("click", onMouseClick);
 
   const onWindowResize = () => {
     if (renderer.current) {
-      renderer.current.setSize(window.innerWidth, 600);}
+      renderer.current.setSize(window.innerWidth, 600);
+    }
     render();
   };
 
@@ -122,6 +157,7 @@ const PlayArea = ({scene, camera, children}) => {
       animate();
       setAnimateRunning(true);
     }
+    // eslint-disable-next-line
   }, []);
 
   function useInterval(callback, delay) {
@@ -193,7 +229,6 @@ const PlayArea = ({scene, camera, children}) => {
 
   const moveFallingObjectsDown = () => {
     delta = clock.getDelta();
-
     for (let i = 0; i < scene.children.length; i++) {
       if (scene.children[i].objectType === "fallingObj") {
         let fallingObj = scene.getObjectByName(scene.children[i].name);
@@ -219,6 +254,10 @@ const PlayArea = ({scene, camera, children}) => {
 
   return (
     <div id="game_container">
+      {showInstructions && (
+        <InstructionsPopup setShowInstructions={setShowInstructions} />
+      )}
+
       <div id="start_end_game_btns_container">
         <div
           className="start_end_game_btn"
@@ -239,6 +278,14 @@ const PlayArea = ({scene, camera, children}) => {
           }}
         >
           End Game
+        </div>
+        <div
+          className="start_end_game_btn"
+          onClick={() => {
+            setShowInstructions(true);
+          }}
+        >
+          Instructions
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import BodyContentHeader from "../common/BodyContentHeader";
+import WorkInProgressMsg from "../common/WorkInProgressMsg";
 const Gallery = () => {
 
   return (
@@ -10,6 +11,7 @@ const Gallery = () => {
         imgSrc="planet_dark.svg"
         imgAlt="planet dark mode"
       />
+      <WorkInProgressMsg />
     </div>
   );
 };

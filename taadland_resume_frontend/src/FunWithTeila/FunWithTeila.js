@@ -1,6 +1,8 @@
+import React, {Suspense} from "react";
+import {FaSpinner} from "react-icons/fa";
 import {PerspectiveCamera, Scene} from "three";
 import "./FunWithTeila.scss";
-import PlayArea from "./PlayArea";
+const PlayArea = React.lazy(() => import("./PlayArea.js"));
 
 const FunWithTeila = () => {
   const fov = 25;
@@ -20,11 +22,14 @@ function onWindowResize() {
 
   return (
     <div id="canvas_container">
+      <Suspense fallback={<div><FaSpinner color="white"/> Loading</div>}>
       <PlayArea 
       camera={camera}
       scene={scene}
       />
+      </Suspense>
       <canvas id="canvas"/>
+      
     </div>
   );
 };
