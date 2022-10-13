@@ -32,6 +32,7 @@
   margin: 0px 0px -20px 0px;
   min-height: -moz-fit-content;
   min-height: fit-content;
+  animation: 1s ease-out 0s 1 slideInFromLeft;
 }
 
 #body_content_h1, #body_content_h4 {
@@ -45,6 +46,8 @@
   min-height: fit-content;
   margin-bottom: 20px;
   margin-top: 20px;
+  animation: 1s ease-out 0s 1 delayedFadeIn;
+
 }
 
 .header_img_container {

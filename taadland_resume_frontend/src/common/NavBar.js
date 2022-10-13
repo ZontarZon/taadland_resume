@@ -1,5 +1,10 @@
 import React from "react";
-import {FaHouseUser, FaList, FaQuestion} from "react-icons/fa";
+import {
+  FaGamepad,
+  FaHouseUser,
+  FaList,
+  FaPalette
+} from "react-icons/fa";
 
 const NavBar = ({openNavSideBar}) => {
   return (
@@ -8,13 +13,13 @@ const NavBar = ({openNavSideBar}) => {
         <FaHouseUser />
         <p>Home</p>
       </a>
-      <a
+      {/*<a
         href="/about"
         className="nav_btn border-gradient border-gradient-purple"
       >
         <FaQuestion />
         <p>About Me</p>
-      </a>
+  </a>*/}
       <a
         href="/resume"
         className="nav_btn border-gradient border-gradient-purple"
@@ -22,13 +27,20 @@ const NavBar = ({openNavSideBar}) => {
         <FaList />
         <p>Resume</p>
       </a>
-      {/*<a
+      <a
         href="/gallery"
         className="nav_btn border-gradient border-gradient-purple"
       >
         <FaPalette />
         <p>Art Gallery</p>
-  </a>*/}
+      </a>
+      <a
+        href="/game"
+        className="nav_btn border-gradient border-gradient-purple"
+      >
+        <FaGamepad />
+        <p>Play with Space Cats</p>
+      </a>
     </div>
   );
 };

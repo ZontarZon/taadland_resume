@@ -3,6 +3,7 @@ import './App.scss';
 import Header from "./common/Header";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
+import Game from "./pages/Game";
 import Landing from "./pages/Landing";
 import Resume from "./pages/Resume";
 
@@ -21,6 +22,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="/gallery" element={<Gallery />} />
+              <Route path="/game" element={<Game />} />
             </Routes>
           </BrowserRouter>
         </div>

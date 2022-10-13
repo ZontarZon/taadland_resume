@@ -35,6 +35,13 @@ const BodyContentHeader = ({headerTitle, headerSubtitle, imgSrc, imgAlt}) => {
                 Stackoverflow
               </a>
             </div>
+
+            <div className="contact_info">
+              <FaCode />
+              <a href="https://github.com/ZontarZon">
+                GitHub
+              </a>
+            </div>
           </div>
         </div>
         <div className="header_img_container">
