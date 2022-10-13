@@ -16,7 +16,7 @@
   background-color: rgb(52, 38, 67);
   width: 50%;
   max-height: calc(80% - 70px);
-  overflow: auto;
+  overflow-y: auto;
   border-radius: 15px;
   padding: 20px;
 
@@ -45,7 +45,6 @@
     border-top: 1px solid white;
     border-bottom: none;
     margin-bottom: 25px;
-    width: 100%;
     min-width: 200px;
   }
 

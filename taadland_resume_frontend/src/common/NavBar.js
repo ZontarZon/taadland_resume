@@ -3,8 +3,7 @@ import {
   FaGamepad,
   FaHouseUser,
   FaList,
-  FaPalette,
-  FaQuestion
+  FaPalette
 } from "react-icons/fa";
 
 const NavBar = ({openNavSideBar}) => {
@@ -14,13 +13,13 @@ const NavBar = ({openNavSideBar}) => {
         <FaHouseUser />
         <p>Home</p>
       </a>
-      <a
+      {/*<a
         href="/about"
         className="nav_btn border-gradient border-gradient-purple"
       >
         <FaQuestion />
         <p>About Me</p>
-      </a>
+  </a>*/}
       <a
         href="/resume"
         className="nav_btn border-gradient border-gradient-purple"

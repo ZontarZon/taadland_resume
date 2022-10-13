@@ -8,8 +8,8 @@ const Gallery = () => {
       <BodyContentHeader
         headerTitle="Art Gallery"
         headerSubtitle="View the shinies."
-        imgSrc="planet_dark.svg"
-        imgAlt="planet dark mode"
+        imgSrc="teila_head.png"
+        imgAlt="teila's head"
       />
       <WorkInProgressMsg />
     </div>

@@ -9,7 +9,8 @@
   );
   padding: 0px 0px 0px 30px;
   height: fit-content;
-  min-height: 300px;
+  min-height: 550px;
+  margin-bottom: 150px;
 }
 
 #landing_header_txt_container {
@@ -19,7 +20,7 @@
   padding: 0px 0px 0px 30px;
 }
 
-#landing_h1, #landing_h3 {
+#landing_h1, #landing_h3, #landing_about_me_h1 {
   font-family: 'Rockwell';
 }
 
@@ -37,17 +38,22 @@
   font-weight: 800;
   margin: 0px 0px -20px 0px;
   min-height: fit-content;
+  animation: 0.8s ease-out 0s 1 slideInFromLeft;
+
 }
 
 #landing_h1_icon {
   max-height: 70px;
   max-width: 70px;
+  animation: rotation 10s infinite linear;
+
 }
 
 #landing_h3 {
   font-size: 40px;
   font-weight: 500;
   min-height: fit-content;
+  animation: 1s ease-out 0s 1 delayedFadeIn;
 }
 
 #landing_header_img_container {
@@ -78,6 +84,8 @@
   display: flex;
   flex-flow: row;
   flex-wrap: wrap;
+  animation: 1s ease-out 0s 1 delayedFadeIn;
+
 }
 
 .contact_info {
@@ -85,10 +93,10 @@
   grid-template-columns: 30px auto;
   align-items: center;
   margin-right: 30px;
-  border: 1px solid #c3b4dd;
-  border-radius: 15px;
+  //border: 1px solid #c3b4dd;
+  border-radius: 25px;
   background-image: linear-gradient(to right, #9c6bb5, #775ea9);
-  padding-left: 10px;
+  padding: 5px 5px 5px 10px;
   margin-bottom: 10px;
   a {
     color: white;
@@ -98,8 +106,149 @@
 }
 
 
+#landing_company_icons_container {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  margin-bottom: 100px;
+
+  img, a {
+    height: inherit;
+    opacity: 0.7;
+    max-width: 200px;
+    margin: 5px;
+  }
+}
+
+#landing_about_me_container {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto 600px;
+  grid-gap: 20px;
+  align-items: center;
+
+  #landing_about_me_text {
+    margin: 40px;
+  }
+
+  #landing_about_me_h1 {
+    margin-bottom: 30px;
+  }
+
+  #landing_about_me_h2 {
+    font-weight: 300;
+  }
+
+  #landing_about_me_gradient_bg {
+    position: relative;
+    width: inherit;
+    height: 300px;
+    border-radius: 150px 0 0 150px;
+    background-image: linear-gradient(0.85turn, #6a379a, #363292);
+  }
+
+  %planet {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  /* @source: https://dev.to/afif/border-with-gradient-and-radius-387f */
+  %planet_ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    background: linear-gradient(0deg,white, white, white, white, transparent, transparent) border-box;
+    -webkit-mask: /*4*/
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
+ -webkit-mask-composite: xor;
+         mask-composite: exclude;
+  }
+
+  #landing_about_me_stars {
+    position: absolute;
+    height: 300px;
+    top: 0px;
+    left: 10%;
+  }
+
+  #landing_about_me_planet_1 {
+    @extend %planet;
+    width: 100px;
+    height: 100px;
+    top: -30px;
+    left: 10%;
+    background-image: linear-gradient(0.85turn, #306aa5, #4eb873);
+    transform: rotate(40deg);
+
+    #landing_about_me_planet_1_ring {
+      @extend %planet_ring;
+      top: 30px;
+      left: calc(10% - 37px);
+      width: 150px;
+      height: 30px;
+    }
+  }
+
+  #landing_about_me_planet_2 {
+    @extend %planet;
+    width: 140px;
+    height: 140px;
+    top: 20px;
+    left: 60%;
+    background-image: linear-gradient(0.85turn, #9e3c9f, #ebd067);
+    transform: rotate(-20deg);
+
+    #landing_about_me_planet_2_ring_1 {
+      @extend %planet_ring;
+      top: 50px;
+      left: calc(40% - 88px);
+      width: 200px;
+      height: 30px;
+    }
+
+    #landing_about_me_planet_2_ring_2 {
+      @extend %planet_ring;
+      top: 51px;
+      left: calc(40% - 111px);
+      width: 250px;
+      height: 39px;
+      opacity: 0.5;
+      border: 1px solid transparent;
+    }
+  }
+
+  #landing_about_me_planet_3 {
+    @extend %planet;
+    width: 200px;
+    height: 200px;
+    top: 130px;
+    left: 12%;
+    background-image: linear-gradient(0.85turn, #4e8eb8, #f2f231);
+    transform: rotate(30deg);
+
+    #landing_about_me_planet_3_ring {
+      @extend %planet_ring;
+      top: 84px;
+      left: calc(12% - 65px);
+      width: 280px;
+      height: 47px;
+      border: 5px solid transparent;
+    }
+  }
+}
 
 @media screen and (max-width: 900px) {
+
+  #landing_about_me_container {
+    display: grid;
+    grid-gap: 0px;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 400px;
+  }
+
 
   #contact_info_container {
     justify-content: center;
@@ -138,6 +287,9 @@
     max-height: 300px;
   }
 
+
+  
+
 @media screen and (max-width: 600px) {
   #landing_h1_icon {
     display: none;
@@ -158,4 +310,3 @@
     padding: 0px;
   }
 }
-
