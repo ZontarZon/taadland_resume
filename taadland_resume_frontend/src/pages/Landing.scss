@@ -65,6 +65,7 @@
 
 #teila_img {
   position: absolute;
+  z-index: 1;
   top: 30px !important;
   animation: rotation 50s infinite linear;
   max-width: inherit;
@@ -108,29 +109,34 @@
 
 #landing_company_icons_container {
   display: flex;
+  position: relative;
   flex-flow: row;
   align-items: center;
   justify-content: center;
   height: 60px;
-  margin-bottom: 100px;
+  margin-bottom: 250px;
 
-  img, a {
+  .company_logo, a {
     height: inherit;
-    opacity: 0.7;
+    z-index: 1;
+    opacity: 0.8;
     max-width: 200px;
     margin: 5px;
   }
 }
 
 #landing_about_me_container {
-  display: grid;
+  display: flex;
+  flex-flow: row;
   width: 100%;
-  grid-template-columns: auto 600px;
+  //grid-template-columns: auto 600px;
   grid-gap: 20px;
   align-items: center;
 
   #landing_about_me_text {
     margin: 40px;
+    float: left;
+    width: 60%;
   }
 
   #landing_about_me_h1 {
@@ -143,8 +149,10 @@
 
   #landing_about_me_gradient_bg {
     position: relative;
-    width: inherit;
+    width: 40%;
     height: 300px;
+    float: right;
+    max-width: 50vw;
     border-radius: 150px 0 0 150px;
     background-image: linear-gradient(0.85turn, #6a379a, #363292);
   }
@@ -240,15 +248,87 @@
   }
 }
 
+#planet_1 {
+  opacity: 1;
+  z-index: 0;
+  position: absolute;
+  width: calc(680px * 1.4);
+  height: calc(406px * 1.4);
+  right: calc(0% - 300px);
+  pointer-events: none;
+ }
+
+ #planet_2 {
+  opacity: 1;
+  z-index: -1;
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: 20px;
+  pointer-events: none;
+ }
+
+ #moon_1 {
+  opacity: 1;
+  z-index: 0;
+  width: 30px;
+  height: calc(203px * 1.4);
+  position: absolute;
+  -webkit-animation: xmotion 8s ease-in-out 0s infinite;
+  animation: xmotion 8s ease-in-out 0s infinite;
+ }
+
+ #moon_1:before {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-image: linear-gradient(0.85turn, #883c9f, #eba567);
+  opacity: 1;
+  z-index: 0;
+  position: absolute;
+  top: 100%;
+  -webkit-animation: ymotion 8s ease-in-out 0s infinite;
+  animation: ymotion 8s ease-in-out 0s infinite;
+ }
+
+@keyframes xmotion {
+  0% {right: -300px; z-index: -1; transform: scale(0.3);}
+
+  50% {right: 500px;  z-index: -1;  transform: scale(0.5);}
+  51% {right: 500px;  z-index: 0;  transform: scale(0.5);}
+
+  100% {right: -300px;  z-index: 0;  transform: scale(2);}
+}
+
+@keyframes ymotion {
+  0% {
+    top: 0%;
+  }
+  50% {top: 80%; }
+  100% {
+    top: 20%;
+  }
+}
+
+
 @media screen and (max-width: 900px) {
 
   #landing_about_me_container {
-    display: grid;
-    grid-gap: 0px;
-    grid-template-columns: 100%;
-    grid-template-rows: auto 400px;
+    display: flex;
+    flex-flow: column;
   }
 
+  #landing_about_me_gradient_bg {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  #landing_about_me_text {
+    margin: 20px !important;
+    width: calc(100% - 40px) !important;
+  }
 
   #contact_info_container {
     justify-content: center;

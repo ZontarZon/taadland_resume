@@ -9,9 +9,10 @@ import Resume from "./pages/Resume";
 
 function App() {
   return (
-    <div style={{width: "100%", height: "100%", position: 'relative'}}>
+    <div style={{width: "100%", height: "100%", position: 'relative', overflowX: 'hidden'}}>
+      <div id="body_overlay_1"></div>
       <div id="body_overlay_2"></div>
-              <img id="planet" alt="planet_dark_mode" src="planet_dark.svg" />
+      <div id="body_overlay_3"></div>
         <Header />
 
       <div id="body_content">

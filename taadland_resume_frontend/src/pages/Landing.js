@@ -49,11 +49,14 @@ const Landing = () => {
 
       <div id="landing_company_icons_container">
         <a href="https://www.smartrobottutor.com/">
-          <img src="van_robotics_current_logo.svg" alt="van robotics logo" />
+          <img className="company_logo" src="van_robotics_current_logo.svg" alt="van robotics logo" />
         </a>
         <a href="https://sc.edu/">
-          <img src="uofsc_logo.svg" alt="university of sc logo" />
+          <img className="company_logo" src="uofsc_logo.svg" alt="university of sc logo" />
         </a>
+        <img id="planet_1" alt="planet_purple" src="planet_1.png" />
+        <img id="planet_2" alt="planet_green" src="planet_2.png" />
+        <div id='moon_1' />
       </div>
 
       <div id="landing_about_me_container">

@@ -22,30 +22,29 @@
 #body_overlay_1 {
   @extend %body_overlay;
   top: 0;
-  background-image: linear-gradient(to bottom, #5946ae, rgba(0,0,0,0));
-  height: 200px;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0), #02041a, #0b153c, #3a145f);
 }
 
 #body_overlay_2 {
   @extend %body_overlay;
   bottom: 0;
-  background-image: radial-gradient(circle at 110% 180%, #d9a0de, rgba(0,0,0,1), rgba(0,0,0,1), rgba(0,0,0,0.5), transparent);
+  //background-image: radial-gradient(circle at 110% 180%, #d9a0de, transparent);
+  background-attachment: fixed;
+  background-repeat: repeat;
+  background-image: url("../public/stars.svg"); /* W3C */  
+  background-size: 450px;
+}
+
+#body_overlay_3 {
+  @extend %body_overlay;
+  bottom: 0;
+ // background-image: radial-gradient(circle at 110% 180%, #874fab, #874fab, rgb(44, 21, 87), #362777, #362777, transparent, transparent, transparent, transparent, transparent);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
- #planet {
-  opacity: 0.3;
-  z-index: 0;
-  position: fixed;
-  width: 900px;
-  max-height: 100vh;
-  bottom: -40%;
-  right: -20%;
-  pointer-events: none;
- }
 
 #body_content_container {
   width: 100%;
@@ -136,4 +135,6 @@ code {
     width: auto;
     border-radius: 0;
   }
+
+
 }

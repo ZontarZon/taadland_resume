@@ -9,8 +9,8 @@ const Game = () => {
       <BodyContentHeader
         headerTitle="Game Corner"
         headerSubtitle="Play games with space cats."
-        imgSrc="planet_dark.svg"
-        imgAlt="planet dark mode"
+        imgSrc="planet_1.svg"
+        imgAlt="planet 1"
       />
       <WorkInProgressMsg />
       <FunWithTeila />
