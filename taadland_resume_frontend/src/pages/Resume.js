@@ -8,8 +8,8 @@ const Resume = () => {
       <BodyContentHeader
         headerTitle="Resume"
         headerSubtitle="Status: Open to work"
-        imgSrc="planet_dark.svg"
-        imgAlt="planet dark mode"
+        imgSrc="planet_1.svg"
+        imgAlt="planet 1"
       />
 
       <div className="body_content_text">

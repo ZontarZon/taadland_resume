@@ -28,6 +28,27 @@ export const initializeCharacter = (scene) => {
   return characterMesh;
 };
 
+export const initializePlusOne = (xPos, zPos, fallingObjectName) => {
+  // indicates a point was earned by picking up food.
+  let plusOneTexture = new TextureLoader().load("plus_one.png");
+  plusOneTexture.encoding = sRGBEncoding;
+  let plusOneMaterial = new MeshBasicMaterial({
+    map: plusOneTexture,
+    side: DoubleSide,
+    transparent: true,
+  });
+
+  const plusOneGeometry = new PlaneGeometry(100, 100);
+  const plusOneMesh = new Mesh(plusOneGeometry, plusOneMaterial);
+  plusOneMesh.position.set(xPos, 1, zPos);
+  //plusOneMesh.rotation.x = (3*Math.PI) / 2;
+  plusOneMesh.objectType = "fallingObjShadow";
+  // unique name
+  plusOneMesh.name = `${Math.random().toString(36).substring(2,22)}`;
+  plusOneMesh.fallingObjectName = fallingObjectName;
+  return plusOneMesh;
+};
+
 export const initializeFloor = (scene) => {
   let floor = scene.getObjectByName("floorMesh");
   if (floor) return;
