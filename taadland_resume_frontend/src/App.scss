@@ -28,17 +28,15 @@
 #body_overlay_2 {
   @extend %body_overlay;
   bottom: 0;
-  //background-image: radial-gradient(circle at 110% 180%, #d9a0de, transparent);
   background-attachment: fixed;
   background-repeat: repeat;
-  background-image: url("../public/stars.svg"); /* W3C */  
+  background-image: url("../public/stars.svg");
   background-size: 450px;
 }
 
 #body_overlay_3 {
   @extend %body_overlay;
   bottom: 0;
- // background-image: radial-gradient(circle at 110% 180%, #874fab, #874fab, rgb(44, 21, 87), #362777, #362777, transparent, transparent, transparent, transparent, transparent);
 }
 
 code {
@@ -49,7 +47,6 @@ code {
 #body_content_container {
   width: 100%;
   margin: auto;
-  //margin-top: 70px;
   padding-bottom: 10px;
   height: fit-content;
   border-radius: 0px 0px 10px 10px;
