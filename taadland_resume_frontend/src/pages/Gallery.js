@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {FaTimes} from "react-icons/fa";
+import {FaArrowLeft, FaArrowRight, FaTimes} from "react-icons/fa";
 import BodyContentHeader from "../common/BodyContentHeader";
 import "./Gallery.scss";
 
@@ -16,7 +16,8 @@ const Gallery = () => {
 
   const [largeImgPopupIndex, setLargeImgPopupIndex] = useState(null);
   const popupRef = useRef(null);
-
+  const popupNextBtnRef = useRef(null);
+  const popupPreviousBtnRef = useRef(null);
   /**
    * Alert if clicked on outside of element
    * @source: https://stackoverflow.com/a/42234988/9457623
@@ -24,7 +25,14 @@ const Gallery = () => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setLargeImgPopupIndex(null);
+        if (popupNextBtnRef.current && popupNextBtnRef.current.contains(event.target)) {
+          setLargeImgPopupIndex(largeImgPopupIndex+1)
+        } else if (popupPreviousBtnRef.current && popupPreviousBtnRef.current.contains(event.target)) {
+          setLargeImgPopupIndex(largeImgPopupIndex-1)
+        } else {
+        setLargeImgPopupIndex(null);          
+        }
+
       }
     }
     // Bind the event listener
@@ -35,10 +43,10 @@ const Gallery = () => {
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [popupRef, largeImgPopupIndex]);
+  }, [largeImgPopupIndex]);
 
   return (
-    <div>
+    <div id='art_gallery_container'>
       <div
         id="large_art_popup_graybox"
         style={{display: largeImgPopupIndex !== null ? "flex" : "none"}}
@@ -51,10 +59,27 @@ const Gallery = () => {
           <FaTimes color="white" size={"40px"} />
         </button>
 
+        <button
+          id="large_art_popup_previous_btn"
+          style={{display: largeImgPopupIndex === 0 ? 'none' : ''}}
+          ref={popupPreviousBtnRef}
+          alt="previous image"
+        >
+          <FaArrowLeft color="white" size={"40px"} />
+        </button>
+
+        <button
+          id="large_art_popup_next_btn"
+          style={{display: largeImgPopupIndex === galleryItemsList.length - 1 ? 'none' : ''}}
+          ref={popupNextBtnRef}
+          alt="next image"
+        >
+          <FaArrowRight color="white" size={"40px"} />
+        </button>
+
         <div id="large_art_popup_container" ref={popupRef}>
           <img
             id="large_art_img"
-            className="art_img"
             src={
               largeImgPopupIndex !== null
                 ? galleryItemsList[largeImgPopupIndex].url
@@ -82,7 +107,9 @@ const Gallery = () => {
             key={index}
             url={value.url}
             altText={value.alt_text}
-            onClick={() => setLargeImgPopupIndex(index)}
+            onClick={() => {
+              console.log('index:', index);
+              setLargeImgPopupIndex(index);}}
           />
         ))}
       </div>

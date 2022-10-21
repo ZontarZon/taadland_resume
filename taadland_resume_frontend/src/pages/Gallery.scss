@@ -20,11 +20,10 @@
   max-width: 100%;
   max-height: 250px;
   border: 1px solid white;
-  transition: box-shadow 0.3s ease;
 }
 
 .art_img:hover {
-  box-shadow: 0px 0px 20px white;
+  box-shadow: 0px 0px 15px white;
 }
 
 #large_art_popup_graybox {
@@ -59,17 +58,37 @@
   justify-content: center;
 }
 
-#large_art_popup_close_btn {
+%art_popup_btn {
   position: absolute;
-  top: 0;
-  right: 0;
-  margin: 10px;
-  height: 60px;
-  width: 60px;
   background-color: transparent;
+  margin: 10px;
   border: 1px solid white;
   border-radius: 10px;
-  cursor: pointer;
+  cursor: pointer;  
+}
+
+#large_art_popup_close_btn {
+  @extend %art_popup_btn;
+  top: 0;
+  right: 0;
+  height: 60px;
+  width: 60px;
+}
+
+#large_art_popup_next_btn, #large_art_popup_previous_btn {
+  @extend %art_popup_btn;
+  height: 200px;
+  width: 60px;
+}
+
+#large_art_popup_next_btn {
+  top: calc(50% - 100px);
+  right: 0px;
+}
+
+#large_art_popup_previous_btn {
+  top: calc(50% - 100px);
+  left: 0px;
 }
 
 #large_art_img {
@@ -80,4 +99,24 @@
 
 #large_art_img:hover {
   box-shadow: none;
+}
+
+@media screen and (max-width: 600px) {
+  #large_art_popup_next_btn, #large_art_popup_previous_btn {
+    @extend %art_popup_btn;
+    height: 60px;
+    width: 60px;
+  }
+  
+  #large_art_popup_next_btn {
+    top: unset;
+    bottom: 70px;
+    right: 0px;
+  }
+  
+  #large_art_popup_previous_btn {
+    top: unset;
+    bottom: 70px;
+    left: 0px;
+  }
 }
