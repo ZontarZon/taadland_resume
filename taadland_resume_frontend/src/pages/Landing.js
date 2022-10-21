@@ -49,14 +49,22 @@ const Landing = () => {
 
       <div id="landing_company_icons_container">
         <a href="https://www.smartrobottutor.com/">
-          <img className="company_logo" src="van_robotics_current_logo.svg" alt="van robotics logo" />
+          <img
+            className="company_logo"
+            src="van_robotics_current_logo.svg"
+            alt="van robotics logo"
+          />
         </a>
         <a href="https://sc.edu/">
-          <img className="company_logo" src="uofsc_logo.svg" alt="university of sc logo" />
+          <img
+            className="company_logo"
+            src="uofsc_logo.svg"
+            alt="university of sc logo"
+          />
         </a>
         <img id="planet_1" alt="planet_purple" src="planet_1.png" />
         <img id="planet_2" alt="planet_green" src="planet_2.png" />
-        <div id='moon_1' />
+        <div id="moon_1" />
       </div>
 
       <div id="landing_about_me_container">
@@ -65,7 +73,10 @@ const Landing = () => {
             STEM and the arts, working in harmony.
           </h1>
           <h2 id="landing_about_me_h2">
-            My name is Thorya, and I'm a digital artist turned software
+            My name is Thorya Aadland (pronounced TORE-yuh ODD-lund), but many
+            people simply call me Zon.
+            <br/><br/>
+            I'm a digital artist turned software
             developer specializing in UI design and development. My background
             in both computer science and digital art gives me an edge in
             creating fun, effective websites and user interfaces.
@@ -73,7 +84,11 @@ const Landing = () => {
         </div>
 
         <div id="landing_about_me_gradient_bg">
-          <img id='landing_about_me_stars' alt='stars' src='stars_transparent.svg' />
+          <img
+            id="landing_about_me_stars"
+            alt="stars"
+            src="stars_transparent.svg"
+          />
 
           <div id="landing_about_me_planet_1">
             <div id="landing_about_me_planet_1_ring" />
@@ -88,8 +103,6 @@ const Landing = () => {
             <div id="landing_about_me_planet_3_ring" />
           </div>
         </div>
-
-        
       </div>
     </div>
   );
