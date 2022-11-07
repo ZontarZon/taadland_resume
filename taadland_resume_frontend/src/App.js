@@ -6,6 +6,7 @@ import Gallery from "./pages/Gallery";
 import Game from "./pages/Game";
 import Landing from "./pages/Landing";
 import Resume from "./pages/Resume";
+import UXPortfolio from "./pages/UXPortfolio";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="/gallery" element={<Gallery />} />
+              <Route path="/ux_portfolio" element={<UXPortfolio />} />
               <Route path="/game" element={<Game />} />
             </Routes>
           </BrowserRouter>

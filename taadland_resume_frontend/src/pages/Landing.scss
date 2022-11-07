@@ -20,7 +20,7 @@
   padding: 0px 0px 0px 30px;
 }
 
-#landing_h1, #landing_h3, #landing_about_me_h1 {
+#landing_h1, #landing_h3, #landing_about_me_h1, .ux_portfolio_project_h1 {
   font-family: 'Rockwell';
 }
 
@@ -125,7 +125,7 @@
   }
 }
 
-#landing_about_me_container {
+#landing_about_me_container, .ux_portfolio_project_container {
   display: flex;
   flex-flow: row;
   width: 100%;
@@ -133,17 +133,17 @@
   grid-gap: 20px;
   align-items: center;
 
-  #landing_about_me_text {
+  #landing_about_me_text, .ux_portfolio_project_text {
     margin: 40px;
     float: left;
     width: 60%;
   }
 
-  #landing_about_me_h1 {
+  #landing_about_me_h1, .ux_portfolio_project_h1 {
     margin-bottom: 30px;
   }
 
-  #landing_about_me_h2 {
+  #landing_about_me_h2, .ux_portfolio_project_h2 {
     font-weight: 300;
   }
 
@@ -315,7 +315,7 @@
 
 @media screen and (max-width: 900px) {
 
-  #landing_about_me_container {
+  #landing_about_me_container, .ux_portfolio_project_container {
     display: flex;
     flex-flow: column;
   }
@@ -325,7 +325,7 @@
     max-width: none !important;
   }
 
-  #landing_about_me_text {
+  #landing_about_me_text, .ux_portfolio_project_text {
     margin: 20px !important;
     width: calc(100% - 40px) !important;
   }
