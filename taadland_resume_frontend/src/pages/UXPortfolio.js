@@ -1,8 +1,8 @@
 import React from "react";
 import AACompetitiveAuditPdf from "../AuctionArt_Competitive_Audit.pdf";
 import AACompetitiveAuditReportPdf from "../AuctionArt_Competitive_Audit_Report.pdf";
+import DrawnWireframes from '../AuctionArt_drawn_wireframe_drafts.png';
 import AAPersonasPdf from "../AuctionArt_personas.pdf";
-
 import BodyContentHeader from "../common/BodyContentHeader";
 import "./UXPortfolio.scss";
 
@@ -70,6 +70,19 @@ const UXPortfolio = () => {
               alt="interviewer man thumbnail"
             />
             <h4>Competitive Audit Report</h4>
+          </a>
+
+          <a
+            href={DrawnWireframes}
+            rel="noopener noreferrer"
+            target="_blank"
+            className="ux_portfolio_project_thumbnail"
+          >
+            <img
+              src="tablet_wireframes_thumbnail.png"
+              alt="wireframes on a tablet thumbnail"
+            />
+            <h4>Wireframe samples, Drawn</h4>
           </a>
         </div>
       </div>
