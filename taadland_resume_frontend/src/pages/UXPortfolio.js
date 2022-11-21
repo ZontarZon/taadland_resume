@@ -1,7 +1,7 @@
 import React from "react";
 import AACompetitiveAuditPdf from "../AuctionArt_Competitive_Audit.pdf";
 import AACompetitiveAuditReportPdf from "../AuctionArt_Competitive_Audit_Report.pdf";
-import DrawnWireframes from '../AuctionArt_drawn_wireframe_drafts.png';
+import DrawnWireframes from "../AuctionArt_drawn_wireframe_drafts.png";
 import AAPersonasPdf from "../AuctionArt_personas.pdf";
 import BodyContentHeader from "../common/BodyContentHeader";
 import "./UXPortfolio.scss";
@@ -83,6 +83,19 @@ const UXPortfolio = () => {
               alt="wireframes on a tablet thumbnail"
             />
             <h4>Wireframe samples, Drawn</h4>
+          </a>
+
+          <a
+            href={`https://www.figma.com/proto/wWug7Nqv4RAKbb3SP61Owe/Wireframes?node-id=1%3A2&scaling=scale-down&page-id=0%3A1&starting-point-node-id=1%3A2`}
+            rel="noopener noreferrer"
+            target="_blank"
+            className="ux_portfolio_project_thumbnail"
+          >
+            <img
+              src="responsive_web_design_thumbnail.png"
+              alt="computer apps thumbnail"
+            />
+            <h4>Figma Low Fidelity Prototype</h4>
           </a>
         </div>
       </div>
