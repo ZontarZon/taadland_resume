@@ -18,7 +18,7 @@ const Resume = () => {
   const [resumeIndex, setResumeIndex] = useState(0);
 
   return (
-    <div>
+    <div className="body_content_container_child">
       <BodyContentHeader
         headerTitle="Resume"
         headerSubtitle="Status: Open to work"

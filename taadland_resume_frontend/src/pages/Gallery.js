@@ -46,7 +46,7 @@ const Gallery = () => {
   }, [largeImgPopupIndex]);
 
   return (
-    <div id='art_gallery_container'>
+    <div id='art_gallery_container' className="body_content_container_child">
       <div
         id="large_art_popup_graybox"
         style={{display: largeImgPopupIndex !== null ? "flex" : "none"}}

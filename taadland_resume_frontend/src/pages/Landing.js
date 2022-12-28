@@ -3,7 +3,7 @@ import {FaCode, FaEnvelope, FaLinkedin} from "react-icons/fa";
 import "./Landing.scss";
 const Landing = () => {
   return (
-    <div>
+    <div className="body_content_container_child">
       <div id="landing_header_container">
         <div id="landing_header_txt_container">
           <div id="landing_h1_container">

@@ -47,9 +47,13 @@ code {
 #body_content_container {
   width: 100%;
   margin: auto;
-  padding-bottom: 10px;
+  //padding-bottom: 10px;
   height: fit-content;
   border-radius: 0px 0px 10px 10px;
+
+  .body_content_container_child {
+    padding-bottom: 15px;
+  }
 }
 
 .body_content_text {

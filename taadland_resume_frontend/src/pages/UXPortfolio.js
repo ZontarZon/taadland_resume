@@ -3,6 +3,7 @@ import AACompetitiveAuditPdf from "../AuctionArt_Competitive_Audit.pdf";
 import AACompetitiveAuditReportPdf from "../AuctionArt_Competitive_Audit_Report.pdf";
 import DrawnWireframes from "../AuctionArt_drawn_wireframe_drafts.png";
 import AALowFiUsabilityStudyReport from "../AuctionArt_low_fi_usability_study_report.pdf";
+import HighFiMockups from "../AuctionArt_mockups.png";
 import AAPersonasPdf from "../AuctionArt_personas.pdf";
 import AALowFiUsabilityStudy from "../AuctionArt_usability_study_Dec_13_2022.pdf";
 
@@ -11,7 +12,7 @@ import "./UXPortfolio.scss";
 
 const UXPortfolio = () => {
   return (
-    <div>
+    <div className="body_content_container_child">
       <BodyContentHeader
         headerTitle="UX Portfolio"
         headerSubtitle="View some of my past UX projects."
@@ -125,6 +126,19 @@ const UXPortfolio = () => {
               alt="interviewer man thumbnail"
             />
             <h4>Low Fidelity Usability Study Insights & Report</h4>
+          </a>
+
+          <a
+            href={HighFiMockups}
+            rel="noopener noreferrer"
+            target="_blank"
+            className="ux_portfolio_project_thumbnail"
+          >
+            <img
+              src="responsive_web_design_thumbnail.png"
+              alt="computer apps thumbnail"
+            />
+            <h4>Figma High Fidelity Mockup Samples</h4>
           </a>
         </div>
       </div>
