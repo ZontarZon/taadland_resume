@@ -4,6 +4,7 @@ import {
   FaCodeBranch,
   FaCodepen,
   FaDownload,
+  FaExternalLinkAlt,
   FaFigma,
   FaMouse,
   FaPalette,
@@ -18,7 +19,7 @@ const Resume = () => {
   const [resumeIndex, setResumeIndex] = useState(0);
 
   return (
-    <div>
+    <div className="body_content_container_child">
       <BodyContentHeader
         headerTitle="Resume"
         headerSubtitle="Status: Open to work"
@@ -184,13 +185,117 @@ const Resume = () => {
 
           <div className={`resume_content_text_${resumeIndex === 4}`}>
             <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
-              <h2>Education</h2>
+              <h2>Education - Degree</h2>
               <hr />
               <h3 style={{margin: 0}}>
                 University of South Carolina, Columbia SC
               </h3>
               <b>
-                <i>B.S. in Computer Science, Minor in Media Arts (2018)</i></b>
+                <i>B.S. in Computer Science, Minor in Media Arts (2018)</i>
+              </b>
+            </div>
+          </div>
+
+          <div className={`resume_content_text_${resumeIndex === 5}`}>
+            <div style={{fontFamily: "sans-serif", textAlign: "left"}}>
+              <h2>Education - Certificates</h2>
+              <hr />
+
+              <div className="certifiate_container">
+                <h3 style={{margin: 0}}>
+                  Foundations of User Experience Design
+                </h3>
+                <b>
+                  <i>Coursera</i>
+                </b>
+
+                <p style={{fontWeight: "lighter", margin: "0px 0px 20px 0px"}}>
+                  Issued Oct 2022 - No expiration date
+                </p>
+                <p>
+                  <a
+                    className="certificate_link"
+                    href="https://www.coursera.org/account/accomplishments/certificate/9BY7SWY3FMCL"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View credential{" "}
+                    <FaExternalLinkAlt style={{marginLeft: "10px"}} />
+                  </a>
+                </p>
+              </div>
+
+              <div className="certifiate_container">
+                <h3 style={{margin: 0}}>
+                  Start the UX Design Process: Empathize, Define, and Ideate
+                </h3>
+                <b>
+                  <i>Coursera</i>
+                </b>
+
+                <p style={{fontWeight: "lighter", margin: "0px 0px 20px 0px"}}>
+                  Issued Nov 2022 - No expiration date
+                </p>
+                <p>
+                  <a
+                    className="certificate_link"
+                    href="https://www.coursera.org/account/accomplishments/certificate/R88D3SAR2RAX"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View credential{" "}
+                    <FaExternalLinkAlt style={{marginLeft: "10px"}} />
+                  </a>
+                </p>
+              </div>
+
+              <div className="certifiate_container">
+                <h3 style={{margin: 0}}>
+                  Build Wireframes and Low-Fidelity Prototypes
+                </h3>
+                <b>
+                  <i>Coursera</i>
+                </b>
+
+                <p style={{fontWeight: "lighter", margin: "0px 0px 20px 0px"}}>
+                  Issued Nov 2022 - No expiration date
+                </p>
+                <p>
+                  <a
+                    className="certificate_link"
+                    href="https://www.coursera.org/account/accomplishments/certificate/TFFSBPJ2VK2J"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View credential{" "}
+                    <FaExternalLinkAlt style={{marginLeft: "10px"}} />
+                  </a>
+                </p>
+              </div>
+
+              <div className="certifiate_container">
+                <h3 style={{margin: 0}}>
+                  Conduct UX Research and Test Early Concepts
+                </h3>
+                <b>
+                  <i>Coursera</i>
+                </b>
+
+                <p style={{fontWeight: "lighter", margin: "0px 0px 20px 0px"}}>
+                  Issued Dec 2022 - No expiration date
+                </p>
+                <p>
+                  <a
+                    className="certificate_link"
+                    href="https://www.coursera.org/account/accomplishments/certificate/5J78Y4KACVC2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View credential{" "}
+                    <FaExternalLinkAlt style={{marginLeft: "10px"}} />
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -202,9 +307,7 @@ const Resume = () => {
           >
             Skills
           </button>
-          <button
-            className={`resume_btn_false experience_btn`}
-          >
+          <button className={`resume_btn_false experience_btn`}>
             Experience
           </button>
           <button
@@ -226,25 +329,29 @@ const Resume = () => {
           >
             <div className="subgroup_square"></div>Freelance Artist
           </button>
-          <button
-            className={`resume_btn_${resumeIndex === 4}`}
-            onClick={() => setResumeIndex(4)}
-          >
+          <button className={`resume_btn_false experience_btn`}>
             Education
           </button>
-
+          <button
+            className={`resume_btn_${resumeIndex === 4} subgroup`}
+            onClick={() => setResumeIndex(4)}
+          >
+            <div className="subgroup_square"></div>Degree
+          </button>
 
           <button
-        className={`resume_btn_false`}
-        
-      >
-        
-        <a href={Pdf} rel="noopener noreferrer" target="_blank">
-          <FaDownload />{` `}Download PDF
-        </a>
-      </button>
+            className={`resume_btn_${resumeIndex === 5} subgroup`}
+            onClick={() => setResumeIndex(5)}
+          >
+            <div className="subgroup_square"></div>Certificates
+          </button>
 
-
+          <button className={`resume_btn_false`}>
+            <a href={Pdf} rel="noopener noreferrer" target="_blank">
+              <FaDownload />
+              {` `}Download PDF
+            </a>
+          </button>
         </div>
       </div>
     </div>

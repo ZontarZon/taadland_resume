@@ -5,7 +5,7 @@ import FunWithTeila from "../FunWithTeila/FunWithTeila";
 const Game = () => {
 
   return (
-    <div>
+    <div className="body_content_container_child">
       <BodyContentHeader
         headerTitle="Game Corner"
         headerSubtitle="Play games with space cats."

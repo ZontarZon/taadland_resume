@@ -1,5 +1,6 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import './App.scss';
+import Footer from "./common/Footer";
 import Header from "./common/Header";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
@@ -28,8 +29,11 @@ function App() {
               <Route path="/game" element={<Game />} />
             </Routes>
           </BrowserRouter>
+          <Footer />
         </div>
       </div>
+
+
     </div>
   );
 }
