@@ -1,27 +1,30 @@
 .ux_portfolio_project_links_container {
   position: relative;
-  margin: 20px;
-  padding: 20px;
+
   height: 100%;
-  width: 100%;
-  background-image: linear-gradient(to right, rgba(119, 94, 169, 0.7), rgba(121, 74, 165, 0.7));
+  max-width: 100%;
+  margin: auto;
+  width: fit-content;
   display: flex;
   flex-flow: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   border-radius: 20px;
 
   .ux_portfolio_project_thumbnail {
-    width: 200px;
+    width: 140px;
     max-width: calc(100vw - 20px);
     margin: 10px;
-   // border: 1px solid white;
     border-radius: 10px;
     display: flex;
     flex-flow: column;
     text-align: center;
     cursor: pointer;
     transition: box-shadow 0.2s ease;
-    background-color: rgba(255,255,255,0.1);
+    background-image: linear-gradient(
+      to right,
+      rgba(119, 94, 169, 0.7),
+      rgba(121, 74, 165, 0.7)
+    );
     color: white;
     text-decoration: none;
 
@@ -33,12 +36,82 @@
       display: flex;
       margin: auto;
       padding: 10px;
-      max-height: 180px;
+      max-height: 120px;
       max-width: calc(100% - 20px);
     }
   }
 
   .ux_portfolio_project_thumbnail:hover {
     box-shadow: 0px 0px 10px white;
+  }
+}
+
+.ux_portfolio_project_container {
+  display: flex;
+  flex-flow: row;
+  display: grid;
+  grid-template-columns: auto 500px;
+  width: 100%;
+  grid-gap: 20px;
+  align-items: center;
+
+  .ux_portfolio_project_text {
+    margin: 40px;
+    float: left;
+  }
+
+  .ux_portfolio_project_h1 {
+    margin-bottom: 30px;
+  }
+
+  .ux_portfolio_project_h2 {
+    font-weight: 300;
+  }
+}
+
+.ux_project_content_container {
+  position: relative;
+  margin: 20px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.ux_project_content_header_container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.ux_project_thumbnail {
+  max-width: 100%;
+  max-height: 500px;
+  display: flex;
+  justify-self: flex-end;
+}
+
+@media screen and (max-width: 900px) {
+  .ux_portfolio_project_container {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .ux_portfolio_project_text {
+    margin: 20px !important;
+    width: calc(100% - 40px) !important;
+  }
+
+  .ux_project_thumbnail_container {
+    display: flex;
+    max-height: 400px;
+    overflow: hidden;
+  }
+
+  .ux_project_thumbnail {
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    justify-self: flex-end;
+    align-self: flex-start;
   }
 }
