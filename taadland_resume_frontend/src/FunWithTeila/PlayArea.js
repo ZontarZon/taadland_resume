@@ -22,11 +22,12 @@ const PlayArea = ({scene, camera, children}) => {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
 
+  const [currentScore, setCurrentScore] = useState(0);
   const [catIsRunning, setCatIsRunning] = useState(false);
-  const [countdown, setCountdown] = useState(30);
+  const [countdown, setCountdown] = useState(60);
+
   let idleTexture = new TextureLoader().load("cat_sprite_anims/cat_idle.png");
   let runTexture = new TextureLoader().load("cat_sprite_anims/cat_run.png");
-
   let runTexture1 = new TextureLoader().load("cat_sprite_anims/cat_run_1.png");
   let runTexture2 = new TextureLoader().load("cat_sprite_anims/cat_run_2.png");
   let runTexture3 = new TextureLoader().load("cat_sprite_anims/cat_run_3.png");
@@ -71,13 +72,10 @@ const PlayArea = ({scene, camera, children}) => {
   const animate = () => {
     if (renderer.current.gameInProgress) {
       moveFallingObjectsDown();
-      checkForCollisions();
     }
     if (movingCharToPos) loop(movingCharToPos);
     requestAnimationFrame(animate);
-
     fpsDelta += fpsClock.getDelta();
-
     if (fpsDelta > interval) {
       // The draw or time dependent code are here
       render();
@@ -88,7 +86,6 @@ const PlayArea = ({scene, camera, children}) => {
 
   function loop(b) {
     let char = scene.getObjectByName("characterMesh");
-
     if (movingCharToPos) {
       let distance = char.position.distanceTo(new Vector3(b.x, b.y, b.z));
       // longer distances need more time
@@ -96,8 +93,8 @@ const PlayArea = ({scene, camera, children}) => {
       new TWEEN.Tween(char.position)
         .to(
           {
-            x: movingCharToPos.x,
-            z: movingCharToPos.z,
+            x: b.x,
+            z: b.z,
           },
           distance * 3
         )
@@ -113,7 +110,6 @@ const PlayArea = ({scene, camera, children}) => {
 
   function onMouseClick(event) {
     let canvas = document.querySelector("canvas");
-
     pointer.x = (event.offsetX / canvas.clientWidth) * 2 - 1;
     pointer.y = -(event.offsetY / canvas.clientHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
@@ -145,16 +141,12 @@ const PlayArea = ({scene, camera, children}) => {
     if (newCharZ > 350) newCharZ = 350;
     movingCharToPos = {x: newCharX, z: newCharZ};
   }
-  window.addEventListener("click", onMouseClick);
 
   const onWindowResize = () => {
     if (renderer.current) {
       renderer.current.setSize(window.innerWidth, 600);
     }
-    render();
   };
-
-  window.addEventListener("resize", onWindowResize, false);
 
   const createRenderer = () => {
     const container = document.querySelector("#canvas");
@@ -184,6 +176,10 @@ const PlayArea = ({scene, camera, children}) => {
       animate();
       setAnimateRunning(true);
     }
+
+    window.addEventListener("click", onMouseClick);
+    window.addEventListener("resize", onWindowResize, false);
+
     // eslint-disable-next-line
   }, []);
 
@@ -205,6 +201,11 @@ const PlayArea = ({scene, camera, children}) => {
     }, [delay]);
   }
 
+  /*
+    checkForCollisions is a heavy duty function that continuously checks
+    if a point needs to be added. It will only update the score state if
+    it's called in a useInterval. Othewise, it will just reset the component.
+  */
   const checkForCollisions = () => {
     let char = scene.getObjectByName("characterMesh");
     raycaster.set(
@@ -225,7 +226,7 @@ const PlayArea = ({scene, camera, children}) => {
         if (fallingObj.position.y < 100) {
           scene.remove(fallingObj);
           scene.remove(scene.getObjectByName(intersects[i].object.name));
-          return;
+          setCurrentScore(currentScore + 1);
         }
       }
     }
@@ -278,9 +279,18 @@ const PlayArea = ({scene, camera, children}) => {
     clearFallingObjects();
   };
 
+  const startGame = () => {
+    setCountdown(60);
+    setCurrentScore(0);
+    setGameInProgress(true);
+    console.log("STARTING GAME");
+    if (renderer.current) renderer.current.gameInProgress = true;
+  };
+
   useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
   useInterval(countDownGame, gameInProgress ? 1000 : null);
   useInterval(animateCatRunCycle, catIsRunning ? 200 : null);
+  useInterval(checkForCollisions, gameInProgress ? 100 : null);
 
   const moveFallingObjectsDown = () => {
     delta = clock.getDelta();
@@ -293,9 +303,7 @@ const PlayArea = ({scene, camera, children}) => {
         objNewPos.x = fallingObj.position.x;
         objNewPos.y = 0;
         objNewPos.z = fallingObj.position.z;
-
         fallingObj.translateY(-(speed * delta));
-
         let percentDistanceFallen = 1 - fallingObj.position.y / 600;
         let newRadiusScale = 1 + percentDistanceFallen * 11;
         shadowObj.scale.set(newRadiusScale, newRadiusScale, newRadiusScale);
@@ -313,19 +321,10 @@ const PlayArea = ({scene, camera, children}) => {
         <InstructionsPopup setShowInstructions={setShowInstructions} />
       )}
 
-{showCredits && (
-        <CreditsPopup setShowCredits={setShowCredits} />
-      )}
+      {showCredits && <CreditsPopup setShowCredits={setShowCredits} />}
 
       <div id="start_end_game_btns_container">
-        <div
-          className="start_end_game_btn"
-          onClick={() => {
-            setGameInProgress(true);
-            console.log("STARTING GAME");
-            if (renderer.current) renderer.current.gameInProgress = true;
-          }}
-        >
+        <div className="start_end_game_btn" onClick={() => startGame()}>
           Start Game
         </div>
         <div className="start_end_game_btn" onClick={() => endGame()}>
@@ -349,7 +348,10 @@ const PlayArea = ({scene, camera, children}) => {
         </div>
       </div>
 
-      <div id="game_countdown_container">{gameInProgress && countdown}</div>
+      <div id="game_countdown_container">
+        <div>Time {countdown}</div>
+        <div>Score {currentScore}</div>
+      </div>
     </div>
   );
 };
