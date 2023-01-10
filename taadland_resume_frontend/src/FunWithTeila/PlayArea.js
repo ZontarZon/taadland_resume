@@ -1,36 +1,55 @@
 import React, {useEffect, useRef, useState} from "react";
 import {
-  WebGLRenderer,
   Clock,
   Raycaster,
-  Vector3,
-  Vector2,
   TextureLoader,
+  Vector2,
+  Vector3,
+  WebGLRenderer
 } from "three";
+import {TWEEN} from "three/examples/jsm/libs/tween.module.min";
 import InstructionsPopup from "./InstructionsPopup";
 import {
   initializeCharacter,
   initializeFallingObject,
-  initializeFloor,
+  initializeFloor
 } from "./Utilities/InitializeObjectFuncs";
 
 const PlayArea = ({scene, camera, children}) => {
   const [animateRunning, setAnimateRunning] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [catIsRunning, setCatIsRunning] = useState(false);
 
-  let idleTexture = new TextureLoader().load("cat_idle.png");
-  let runTexture = new TextureLoader().load("cat_run.png");
+  let idleTexture = new TextureLoader().load("cat_sprite_anims/cat_idle.png");
+  let runTexture = new TextureLoader().load("cat_sprite_anims/cat_run.png");
+
+  let runTexture1 = new TextureLoader().load("cat_sprite_anims/cat_run_1.png");
+  let runTexture2 = new TextureLoader().load("cat_sprite_anims/cat_run_2.png");
+  let runTexture3 = new TextureLoader().load("cat_sprite_anims/cat_run_3.png");
+  let runTexture4 = new TextureLoader().load("cat_sprite_anims/cat_run_4.png");
+  let runTexture5 = new TextureLoader().load("cat_sprite_anims/cat_run_5.png");
+  let runTexture6 = new TextureLoader().load("cat_sprite_anims/cat_run_6.png");
+  let runTexture7 = new TextureLoader().load("cat_sprite_anims/cat_run_7.png");
+
+  let runSprites = [runTexture1, runTexture2, runTexture3, runTexture4, runTexture5, runTexture6, runTexture7];
 
   let movingCharToPos = null;
+  let currentCatRunCycleIndex = 0;
+
+
   const renderer = useRef(null);
   const pointer = new Vector2();
   const raycaster = new Raycaster();
 
   let container;
   let clock = new Clock();
+  let fpsClock = new Clock();
+
   let speed = 50;
   let delta = 0;
+  let fpsDelta = 0;
+  let interval = 1 / 30;
 
   const render = () => {
     if (renderer.current) {
@@ -46,20 +65,19 @@ const PlayArea = ({scene, camera, children}) => {
     }
     if (movingCharToPos) loop(movingCharToPos);
     requestAnimationFrame(animate);
-    render();
+
+    fpsDelta += fpsClock.getDelta();
+
+    if (fpsDelta > interval) {
+      // The draw or time dependent code are here
+      render();
+      TWEEN.update();
+      fpsDelta = fpsDelta % interval;
+    }
   };
 
   let frames = 0;
   let maxFrames = 500;
-
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  // for a better sliding effect
-  function ease(t) {
-    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-  }
 
   function loop(b) {
     let char = scene.getObjectByName("characterMesh");
@@ -76,10 +94,29 @@ const PlayArea = ({scene, camera, children}) => {
       }
       return;
     }
-    let t = frames / maxFrames;
-    var newX = lerp(char.position.x, b.x, ease(t));
-    var newZ = lerp(char.position.z, b.z, ease(t));
-    char.position.set(newX, char.position.y, newZ);
+
+    if (movingCharToPos) {
+      let boardDistance = 2000; //ms to traverse the entire board
+      let distance = char.position.distanceTo(new Vector3(b.x, b.y, b.z));
+      console.log(distance);
+      // longer distances need more time
+      setCatIsRunning(true);
+      new TWEEN.Tween(char.position)
+        .to(
+          {
+            x: movingCharToPos.x,
+            z: movingCharToPos.z,
+          },
+          distance * 3
+        ).onComplete(() => {
+          setCatIsRunning(false);
+          char.material.map = idleTexture;
+          char.currentSprite = "walk";
+          
+          })
+        .start();
+      movingCharToPos = null;
+    }
     frames++;
   }
 
@@ -225,7 +262,25 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
+  const animateCatRunCycle = () => {
+    let char = scene.getObjectByName("characterMesh");
+
+
+        char.material.map = runSprites[currentCatRunCycleIndex];
+
+        if (currentCatRunCycleIndex !== 6) {
+          currentCatRunCycleIndex++;
+        }
+         else {
+          currentCatRunCycleIndex = 0;
+         }
+        
+
+  }
+
   useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
+  useInterval(animateCatRunCycle, catIsRunning ? 200 : null);
+
 
   const moveFallingObjectsDown = () => {
     delta = clock.getDelta();

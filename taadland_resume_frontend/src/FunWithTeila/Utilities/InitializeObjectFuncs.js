@@ -12,7 +12,7 @@ export const initializeCharacter = (scene) => {
   let char = scene.getObjectByName("characterMesh");
   if (char) return;
   // playable char init
-  let characterTexture = new TextureLoader().load("cat_idle.png");
+  let characterTexture = new TextureLoader().load("cat_sprite_anims/cat_idle.png");
   characterTexture.encoding = sRGBEncoding;
   let characterMaterial = new MeshBasicMaterial({
     map: characterTexture,
