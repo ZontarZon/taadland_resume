@@ -8,6 +8,7 @@ import {
   WebGLRenderer
 } from "three";
 import {TWEEN} from "three/examples/jsm/libs/tween.module.min";
+import CreditsPopup from "./CreditsPopup";
 import InstructionsPopup from "./InstructionsPopup";
 import {
   initializeCharacter,
@@ -19,8 +20,10 @@ const PlayArea = ({scene, camera, children}) => {
   const [animateRunning, setAnimateRunning] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
-  const [catIsRunning, setCatIsRunning] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
 
+  const [catIsRunning, setCatIsRunning] = useState(false);
+  const [countdown, setCountdown] = useState(30);
   let idleTexture = new TextureLoader().load("cat_sprite_anims/cat_idle.png");
   let runTexture = new TextureLoader().load("cat_sprite_anims/cat_run.png");
 
@@ -32,11 +35,18 @@ const PlayArea = ({scene, camera, children}) => {
   let runTexture6 = new TextureLoader().load("cat_sprite_anims/cat_run_6.png");
   let runTexture7 = new TextureLoader().load("cat_sprite_anims/cat_run_7.png");
 
-  let runSprites = [runTexture1, runTexture2, runTexture3, runTexture4, runTexture5, runTexture6, runTexture7];
+  let runSprites = [
+    runTexture1,
+    runTexture2,
+    runTexture3,
+    runTexture4,
+    runTexture5,
+    runTexture6,
+    runTexture7,
+  ];
 
   let movingCharToPos = null;
   let currentCatRunCycleIndex = 0;
-
 
   const renderer = useRef(null);
   const pointer = new Vector2();
@@ -76,29 +86,11 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
-  let frames = 0;
-  let maxFrames = 500;
-
   function loop(b) {
     let char = scene.getObjectByName("characterMesh");
 
-    if (
-      frames >= maxFrames ||
-      Math.abs(char.position.x - b.x) <= 0.5 ||
-      Math.abs(char.position.z - b.z) <= 0.5
-    ) {
-      frames = 0;
-      if (char.currentSprite !== "walk") {
-        char.material.map = idleTexture;
-        char.currentSprite = "walk";
-      }
-      return;
-    }
-
     if (movingCharToPos) {
-      let boardDistance = 2000; //ms to traverse the entire board
       let distance = char.position.distanceTo(new Vector3(b.x, b.y, b.z));
-      console.log(distance);
       // longer distances need more time
       setCatIsRunning(true);
       new TWEEN.Tween(char.position)
@@ -108,20 +100,18 @@ const PlayArea = ({scene, camera, children}) => {
             z: movingCharToPos.z,
           },
           distance * 3
-        ).onComplete(() => {
+        )
+        .onComplete(() => {
           setCatIsRunning(false);
           char.material.map = idleTexture;
           char.currentSprite = "walk";
-          
-          })
+        })
         .start();
       movingCharToPos = null;
     }
-    frames++;
   }
 
   function onMouseClick(event) {
-    frames = 0;
     let canvas = document.querySelector("canvas");
 
     pointer.x = (event.offsetX / canvas.clientWidth) * 2 - 1;
@@ -265,22 +255,32 @@ const PlayArea = ({scene, camera, children}) => {
   const animateCatRunCycle = () => {
     let char = scene.getObjectByName("characterMesh");
 
+    char.material.map = runSprites[currentCatRunCycleIndex];
 
-        char.material.map = runSprites[currentCatRunCycleIndex];
+    if (currentCatRunCycleIndex !== 6) {
+      currentCatRunCycleIndex++;
+    } else {
+      currentCatRunCycleIndex = 0;
+    }
+  };
 
-        if (currentCatRunCycleIndex !== 6) {
-          currentCatRunCycleIndex++;
-        }
-         else {
-          currentCatRunCycleIndex = 0;
-         }
-        
+  const countDownGame = () => {
+    if (countdown === 0) {
+      endGame();
+    } else {
+      setCountdown(countdown - 1);
+    }
+  };
 
-  }
+  const endGame = () => {
+    setGameInProgress(false);
+    if (renderer.current) renderer.current.gameInProgress = false;
+    clearFallingObjects();
+  };
 
   useInterval(spawnFallingObject, gameInProgress ? 2000 : null);
+  useInterval(countDownGame, gameInProgress ? 1000 : null);
   useInterval(animateCatRunCycle, catIsRunning ? 200 : null);
-
 
   const moveFallingObjectsDown = () => {
     delta = clock.getDelta();
@@ -313,6 +313,10 @@ const PlayArea = ({scene, camera, children}) => {
         <InstructionsPopup setShowInstructions={setShowInstructions} />
       )}
 
+{showCredits && (
+        <CreditsPopup setShowCredits={setShowCredits} />
+      )}
+
       <div id="start_end_game_btns_container">
         <div
           className="start_end_game_btn"
@@ -324,14 +328,7 @@ const PlayArea = ({scene, camera, children}) => {
         >
           Start Game
         </div>
-        <div
-          className="start_end_game_btn"
-          onClick={() => {
-            setGameInProgress(false);
-            if (renderer.current) renderer.current.gameInProgress = false;
-            clearFallingObjects();
-          }}
-        >
+        <div className="start_end_game_btn" onClick={() => endGame()}>
           End Game
         </div>
         <div
@@ -342,7 +339,17 @@ const PlayArea = ({scene, camera, children}) => {
         >
           Instructions
         </div>
+        <div
+          className="start_end_game_btn"
+          onClick={() => {
+            setShowCredits(true);
+          }}
+        >
+          Credits
+        </div>
       </div>
+
+      <div id="game_countdown_container">{gameInProgress && countdown}</div>
     </div>
   );
 };

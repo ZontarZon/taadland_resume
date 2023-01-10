@@ -41,7 +41,6 @@ export const initializePlusOne = (xPos, zPos, fallingObjectName) => {
   const plusOneGeometry = new PlaneGeometry(100, 100);
   const plusOneMesh = new Mesh(plusOneGeometry, plusOneMaterial);
   plusOneMesh.position.set(xPos, 1, zPos);
-  //plusOneMesh.rotation.x = (3*Math.PI) / 2;
   plusOneMesh.objectType = "fallingObjShadow";
   // unique name
   plusOneMesh.name = `${Math.random().toString(36).substring(2,22)}`;
@@ -93,8 +92,8 @@ const initializeShadowObject = (xPos, zPos, fallingObjectName) => {
 };
 
 export const initializeFallingObject = () => {
-  let randomNum = getRandomIntInRange(1, 5);
-  let objTexture = new TextureLoader().load(`falling_obj_sprite_${randomNum}.png`);
+  let randomNum = getRandomIntInRange(1, 4);
+  let objTexture = new TextureLoader().load(`game_food_icons/falling_obj_sprite_${randomNum}.png`);
   objTexture.encoding = sRGBEncoding;
   let objMaterial = new MeshBasicMaterial({
     map: objTexture,
