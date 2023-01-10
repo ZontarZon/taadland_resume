@@ -21,11 +21,11 @@ const PlayArea = ({scene, camera, children}) => {
   const [gameInProgress, setGameInProgress] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
-
   const [currentScore, setCurrentScore] = useState(0);
   const [catIsRunning, setCatIsRunning] = useState(false);
   const [countdown, setCountdown] = useState(60);
 
+  //preload sprites
   let idleTexture = new TextureLoader().load("cat_sprite_anims/cat_idle.png");
   let runTexture = new TextureLoader().load("cat_sprite_anims/cat_run.png");
   let runTexture1 = new TextureLoader().load("cat_sprite_anims/cat_run_1.png");
@@ -73,18 +73,21 @@ const PlayArea = ({scene, camera, children}) => {
     if (renderer.current.gameInProgress) {
       moveFallingObjectsDown();
     }
-    if (movingCharToPos) loop(movingCharToPos);
+    if (movingCharToPos) moveChar(movingCharToPos);
     requestAnimationFrame(animate);
     fpsDelta += fpsClock.getDelta();
     if (fpsDelta > interval) {
-      // The draw or time dependent code are here
       render();
       TWEEN.update();
       fpsDelta = fpsDelta % interval;
     }
   };
 
-  function loop(b) {
+  /**
+   * Starts kitty's movement and marks him ready for his sprite run cycles.
+   * @param {Vector3} b 
+   */
+  function moveChar(b) {
     let char = scene.getObjectByName("characterMesh");
     if (movingCharToPos) {
       let distance = char.position.distanceTo(new Vector3(b.x, b.y, b.z));
@@ -108,6 +111,13 @@ const PlayArea = ({scene, camera, children}) => {
     }
   }
 
+  /**
+   * Runs the raycaster and determines the coordinates on the floor where
+   * the mouse clicked. This is where kitty will move. This also
+   * handles the parameters of the board so kitty doesn't walk into space.
+   * @param {object} event 
+   * @returns 
+   */
   function onMouseClick(event) {
     let canvas = document.querySelector("canvas");
     pointer.x = (event.offsetX / canvas.clientWidth) * 2 - 1;
@@ -165,21 +175,16 @@ const PlayArea = ({scene, camera, children}) => {
     if (!container) {
       createRenderer(renderer, scene, render);
     }
-
     let floorMesh = initializeFloor(scene);
     if (floorMesh) scene.add(floorMesh);
-
     let characterMesh = initializeCharacter(scene);
     if (characterMesh) scene.add(characterMesh);
-
     if (!animateRunning) {
       animate();
       setAnimateRunning(true);
     }
-
     window.addEventListener("click", onMouseClick);
     window.addEventListener("resize", onWindowResize, false);
-
     // eslint-disable-next-line
   }, []);
 
@@ -232,6 +237,9 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
+  /**
+   * Spawns a random food item and its shadow.
+   */
   const spawnFallingObject = () => {
     let newObjects = initializeFallingObject();
     let newFallingObj = newObjects.fallingObj;
@@ -240,6 +248,9 @@ const PlayArea = ({scene, camera, children}) => {
     scene.add(newFallingObjShadow);
   };
 
+  /**
+   * When the game ends, this clears all food and shadows.
+   */
   const clearFallingObjects = () => {
     let objectsToRemove = [];
     for (let i = 0; i < scene.children.length; i++) {
@@ -253,11 +264,12 @@ const PlayArea = ({scene, camera, children}) => {
     }
   };
 
+  /**
+   * Iterates through the cat run cycle sprites.
+   */
   const animateCatRunCycle = () => {
     let char = scene.getObjectByName("characterMesh");
-
     char.material.map = runSprites[currentCatRunCycleIndex];
-
     if (currentCatRunCycleIndex !== 6) {
       currentCatRunCycleIndex++;
     } else {
@@ -292,6 +304,11 @@ const PlayArea = ({scene, camera, children}) => {
   useInterval(animateCatRunCycle, catIsRunning ? 200 : null);
   useInterval(checkForCollisions, gameInProgress ? 100 : null);
 
+  /**
+   * moveFallingObjectsDown moves the food down and increases the size
+   * of the shadows during game time. It will also remove food that
+   * reaches the floor.
+   */
   const moveFallingObjectsDown = () => {
     delta = clock.getDelta();
     for (let i = 0; i < scene.children.length; i++) {

@@ -43,13 +43,25 @@ const CreditsPopup = ({setShowCredits}) => {
           Other game assets are public domain and courtesy of{" "}
           <a
             href="https://opengameart.org/"
-            style={{margin: '0px'}}
+            style={{margin: "0px"}}
             rel="noopener noreferrer"
             target="_blank"
           >
             OpenGameArt.org
           </a>
           .
+        </p>
+
+        <p>
+          Game was made with React and Three.js.{" "}
+          <a
+            href="https://github.com/ZontarZon/taadland_resume"
+            style={{margin: "0px"}}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            View my source code on GitHub.
+          </a>
         </p>
         <div id="exit_btn_container" onClick={() => setShowCredits(false)}>
           <FaTimes color="white" />
